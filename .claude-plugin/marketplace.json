@@ -1,14 +1,14 @@
 {
-  "name": "claude-tools",
+  "name": "llm-tools",
   "description": "Productivity plugins for Claude Code",
-  "author": "choihyunbin",
-  "repository": "https://github.com/choihyunbin/claude-tools",
+  "owner": {
+    "name": "bingl2"
+  },
   "plugins": [
     {
       "name": "timebox",
-      "path": "timebox",
-      "description": "Timeboxing-based daily planning system with goal alignment coaching",
-      "version": "1.0.0"
+      "source": "./timebox",
+      "description": "Timeboxing-based daily planning system with goal alignment coaching"
     }
   ]
 }
