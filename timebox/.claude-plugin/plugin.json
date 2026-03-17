@@ -1,0 +1,7 @@
+{
+  "name": "timebox",
+  "description": "타임박싱 기반 하루 계획 + 목표 정렬 코칭 시스템. Big 3 중심의 하루 설계, 자동 체크인, 팩트 기반 리뷰.",
+  "author": {
+    "name": "choihyunbin"
+  }
+}
