@@ -35,28 +35,28 @@ Timebox는 이걸 도와주는 시스템이에요. **"뭘 하지?"가 아니라 
 
 ## 시스템 전체 그림
 
+```mermaid
+graph TD
+    F["<b>Foundation</b><br/>나는 누구이고, 어디로 가는가"] --> G["연간 → 월간 → 주간 목표"]
+    G --> TB["/timebox<br/>매일 아침"]
+    TB -->|"Big 3 + 시간 블록 생성<br/>Foundation 자기 지식 → 블록 배치 참고"| DAY
+
+    subgraph DAY [하루]
+        CHECK["/timebox-check · 자동 체크인"]
+        NEXT["/timebox-next · 블록 전환"]
+        LOG["/timebox-log · 작업 기록"]
+    end
+
+    DAY --> END["/timebox-end<br/>하루 마감"]
+    END -->|"Big 3 리뷰 + Reflection + Growth Notes"| REV["/timebox-review<br/>주간 · 월간 리뷰"]
+    REV -->|"패턴 발견<br/>→ 다음 주 목표 생성<br/>→ Foundation 자기 지식 업데이트<br/>→ 실험 1개 설정"| F
+
+    style F fill:#4a90d9,color:#fff
+    style REV fill:#d9534f,color:#fff
+    style TB fill:#5cb85c,color:#fff
+    style END fill:#f0ad4e,color:#fff
 ```
-Foundation (나는 누구이고, 어디로 가는가)
-  └→ 연간 목표 → 월간 목표 → 주간 목표
-       └→ /timebox (매일 아침) ─────────────────────┐
-            │  Big 3 + 시간 블록 생성                │
-            │  Foundation 자기 지식 → 블록 배치 참고  │
-            ↓                                        │
-       /timebox-check (자동 체크인)                   │
-       /timebox-next (블록 전환)                      │
-       /timebox-log (작업 기록)                       │
-            ↓                                        │
-       /timebox-end (하루 마감)                       │
-            │  Big 3 리뷰 + Reflection + Growth Notes │
-            ↓                                        │
-       /timebox-review (주간/월간 리뷰)               │
-            │  패턴 발견                              │
-            │  → 다음 주 목표 생성                    │
-            │  → Foundation 자기 지식 업데이트         │
-            │  → 실험 1개 설정                        │
-            └─────────────────────────────────────────┘
-                    (닫힌 루프 — 리뷰가 다음 날을 바꾼다)
-```
+> **닫힌 루프** — 리뷰가 다음 날을 바꾼다
 
 리뷰를 할수록 Foundation의 "자기 지식"이 두꺼워지고, 매일 `/timebox`가 그걸 읽어서 블록을 배치해요. **시스템을 쓸수록 시스템이 나에게 맞아가요.**
 
