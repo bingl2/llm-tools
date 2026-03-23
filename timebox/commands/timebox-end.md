@@ -216,6 +216,21 @@ Block Adherence: {n}%
 - 오픈 루프 리마인드
 - 월간/주간 목표 대비 간략 진행상황 (있으면)
 
+### 10단계: Git 자동 커밋 + Push
+
+timebox base path가 git repo이면, 변경된 기록을 자동으로 커밋하고 push합니다.
+
+1. `git -C {base} status --porcelain`으로 변경 파일 확인
+2. 변경 없으면 스킵
+3. 변경 있으면:
+   - `git -C {base} add plans/ logs/ reviews/ goals/`
+   - 커밋 메시지: `{YYYY-MM-DD} timebox — Big 3: {완료}/{전체}, {한줄 요약}`
+   - `git -C {base} push`
+4. remote 설정 확인: `git -C {base} remote -v`
+   - SSH config에 별도 Host가 설정된 경우 (예: `personal`) 해당 Host를 사용
+5. push 실패 시 에러 안내만 하고 진행 (블로커 아님)
+6. "기록 저장 완료 (commit: {hash})" 안내
+
 ## 참고
 
 - 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md`
