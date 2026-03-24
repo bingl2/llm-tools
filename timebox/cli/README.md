@@ -1,4 +1,4 @@
-# timebox-cli
+# timebox CLI
 
 타임박싱 기반 시간 관리 CLI — LLM 코칭 시스템의 데이터 엔진.
 
@@ -7,7 +7,7 @@
 ## 설치
 
 ```bash
-cd timebox-cli
+cd timebox/cli
 uv pip install -e ".[dev]"
 ```
 
