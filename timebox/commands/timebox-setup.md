@@ -10,6 +10,47 @@ category: productivity
 
 ## 실행 흐름
 
+### 0단계: CLI 설치 확인
+
+> 이 단계는 timebox CLI가 설치되어 있는지 확인하고, 없으면 자동 설치합니다.
+
+1. `which timebox` 실행하여 CLI 설치 여부 확인
+2. **이미 설치됨** → 바로 1단계로 진행
+3. **미설치 시** 순서대로 진행:
+
+**3-1. Python 확인:**
+- `python3 --version`으로 Python 3.11+ 확인
+- 없거나 3.11 미만이면 안내 후 중단:
+  ```
+  "Python 3.11 이상이 필요합니다.
+   - macOS: brew install python
+   - 기타: https://python.org 에서 설치
+   설치 후 /timebox-setup을 다시 실행해주세요."
+  ```
+
+**3-2. uv 확인 + 설치:**
+- `which uv`로 확인
+- 없으면 AskUserQuestion: "패키지 관리자 uv를 설치해야 합니다. 설치할까요? (Y/n)"
+  - Y → `curl -LsSf https://astral.sh/uv/install.sh | sh` 실행
+  - n → "uv 없이는 CLI를 설치할 수 없습니다." 안내 후 중단
+
+**3-3. CLI 설치:**
+- **경로 탐색** (우선순위):
+  1. 현재 커맨드 파일의 상대 경로 기반: 이 프롬프트(`timebox-setup.md`)가 `{플러그인루트}/commands/` 안에 있으므로, `{플러그인루트}/cli/pyproject.toml` 존재 여부를 확인하여 CLI 경로 확보
+  2. Fallback: Glob으로 `**/timebox/cli/pyproject.toml` 검색 (검색 범위: `~/.claude/`, 홈 디렉토리)
+- `uv tool install {CLI경로}` 실행
+- `timebox --help`로 설치 확인
+- 실패 시 수동 설치 안내:
+  ```
+  "자동 설치에 실패했습니다. 아래 명령어로 직접 설치해주세요:
+   cd {플러그인경로}/cli && uv tool install ."
+  ```
+
+**3-4. 설치 완료 안내:**
+```
+"timebox CLI가 설치되었습니다."
+```
+
 ### 1단계: 기존 상태 확인
 
 1. `echo $TIMEBOX_HOME`으로 환경변수 확인
