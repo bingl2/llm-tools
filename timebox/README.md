@@ -59,7 +59,7 @@ graph TD
         ALIGN_INIT -->|"브레인덤프 → 인터뷰<br/>→ Foundation + 목표 계층"| F
     end
 
-    subgraph DAILY ["매일 — 하루의 사이클"]
+    subgraph DAILY ["매일 — 하루의 사이클 (Big 3 + 시간 블록 생성)"]
         TB["/timebox<br/>아침 설계"]
         TB --> LOOP["/timebox-loop · 자동 체크"]
         TB --> NOW["/timebox-now · 지금 뭐하지?"]
