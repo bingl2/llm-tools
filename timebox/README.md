@@ -288,12 +288,17 @@ git clone https://github.com/bingl2/llm-tools.git
 #    /plugin → Add local → 클론한 경로 입력
 ```
 
+### 사전 요구사항
+
+- **Python 3.11 이상** — [python.org](https://python.org) 또는 `brew install python`
+  - uv, timebox CLI는 `/timebox-setup`에서 자동 설치됩니다.
+
 ### 첫 실행
 
 설치 후 Claude Code에서:
 
 ```
-/timebox-setup    # 시스템 설정 (경로, 블록 길이, 체크인 주기)
+/timebox-setup    # CLI 설치 + 시스템 설정 (경로, 블록 길이, 체크인 주기)
 /timebox-align    # 목표 정렬 (Foundation + 목표 계층)
 /timebox          # 오늘 하루 설계
 ```
