@@ -17,32 +17,26 @@ Claude는 이 과정에서:
 
 최초 목표 설정뿐 아니라, 매주/매월 목표를 갱신하거나, 큰 방향 전환 시 재정렬할 때도 사용합니다.
 
-## 경로 설정
-
-```
-Base Path: $TIMEBOX_HOME (환경변수 미설정 시 ~/timebox)
-Goals: {base}/goals/
-Config: {base}/_config.md
-```
-
-- 시작 시 `echo $TIMEBOX_HOME`으로 확인. 없으면 `~/timebox` 사용.
-- `_config.md`가 없으면: "`/timebox-setup`으로 시스템 설정을 먼저 해주세요." 안내 후 종료
+## 경로
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). `_config.md`가 없으면 `/timebox-setup` 먼저 안내 후 종료.
 
 ## 모드 판별
 
 ### 1단계: 기존 데이터 확인
 
-1. `{base}/goals/_foundation.md` 존재 여부 확인
+1. `{base}/goals/{올해}-foundation.md` 존재 여부 확인
 2. `{base}/goals/{올해}.md` 존재 여부 확인
 3. `{base}/goals/{올해-이번달}.md` 존재 여부 확인
 4. `{base}/goals/{올해}-W{이번주}.md` 존재 여부 확인
 
 **모드 자동 판별:**
-- **Cold Start**: _foundation.md 없음 → 처음부터 전부 세팅
-- **Refresh**: _foundation.md 있음 + 주간 목표가 지난 주 이전 → 주간/월간 업데이트
+- **Cold Start**: {올해}-foundation.md 없음 → 처음부터 전부 세팅
+- **Refresh**: {올해}-foundation.md 있음 + 주간 목표가 지난 주 이전 → 주간/월간 업데이트
 - **Realign**: 사용자가 "방향을 바꾸고 싶다", "목표를 재설정" 등 → Foundation부터 재검토
 
 ## Cold Start 모드
+
+> 시작 전: `{base}/_config.md` 존재 여부 확인. 없으면 '/timebox-setup을 먼저 실행하시겠습니까? 아니면 기본 설정으로 진행?' 질문 후 진행.
 
 ### Step 0: Brain-dump (먼저 많이 말하게 하기)
 
@@ -172,7 +166,7 @@ W3: {목표} (Parent: 유지)
 
 확정 후 4개 파일 생성:
 
-**1. `{base}/goals/_foundation.md`**
+**1. `{base}/goals/{YYYY}-foundation.md`**
 ```markdown
 # Foundation
 
@@ -191,6 +185,20 @@ W3: {목표} (Parent: 유지)
 
 ## 안 할 것
 - {항목}
+
+## 자기 지식
+
+### 에너지 패턴
+
+### 몰입 조건
+
+### 회피 트리거
+
+### 추정 정확도
+
+### 검증된 전략
+
+## 성장 로그
 ```
 
 **2. `{base}/goals/{YYYY}.md`**
@@ -251,7 +259,7 @@ Parent: 유지
 
 ```
 "목표 정렬이 완료되었습니다. 4개 파일을 생성했습니다:
-- goals/_foundation.md (방향, 제약)
+- goals/{YYYY}-foundation.md (방향, 제약, 자기 지식)
 - goals/{YYYY}.md (연간 목표)
 - goals/{YYYY-MM}.md (월간 목표)
 - goals/{YYYY}-W{WW}.md (주간 목표)
@@ -262,12 +270,14 @@ Parent: 유지
 
 ## Refresh 모드 (매주 월요일 등)
 
+> `/timebox-review`에서 이미 다음 기간 목표를 설정했으면 확인만 하고 넘어갑니다. review를 실행하지 않았을 때의 fallback 경로입니다.
+
 ### 1단계: 지난주 리뷰 수집
 
 1. `{base}/reviews/` 에서 지난주 daily review 파일들 Read
 2. `{base}/reviews/{올해}-W{지난주}-weekly-review.md` Read (있으면 — `/timebox-review`로 생성된 주간 리뷰)
 3. `{base}/goals/{올해}-W{지난주}.md` Read
-4. `{base}/goals/_foundation.md` Read (자기 지식 섹션 참조)
+4. `{base}/goals/{올해}-foundation.md` Read (자기 지식 섹션 참조)
 5. 주간 목표별 달성률 계산
 
 ### 2단계: 리뷰 요약 제시
@@ -316,9 +326,10 @@ Foundation 업데이트: {자기 지식에 추가된 내용 요약}"
 ## Realign 모드
 
 Foundation부터 재검토. Cold Start와 동일하지만:
-- 기존 파일을 Read하여 현재 상태 먼저 보여줌
-- "어떤 부분을 바꾸고 싶으세요?" 로 시작
+- Step 0(Brain-dump) 대신, 기존 `{base}/goals/{올해}-foundation.md`를 Read하여 현재 상태를 먼저 보여줌
+- '어떤 부분을 바꾸고 싶으세요?' 로 시작
 - 변경 부분만 Edit, 전체 재작성은 하지 않음
+- 변경 후 하위 목표(연간 → 월간 → 주간)도 정렬 필요 여부 확인
 
 ## 핵심 원칙
 
@@ -331,7 +342,7 @@ Foundation부터 재검토. Cold Start와 동일하지만:
 
 ## 참고
 
-- Foundation: `{base}/goals/_foundation.md`
+- Foundation: `{base}/goals/{YYYY}-foundation.md`
 - Config: `{base}/_config.md` (체크인 주기 등 운영 설정은 여기)
 - 연간: `{base}/goals/{YYYY}.md`
 - 월간: `{base}/goals/{YYYY-MM}.md`

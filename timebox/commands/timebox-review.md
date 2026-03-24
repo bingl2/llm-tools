@@ -17,19 +17,14 @@ category: productivity
 /timebox-review yearly       → 연간 리뷰
 ```
 
-## 경로 설정
-
-```
-Base Path: $TIMEBOX_HOME (환경변수 미설정 시 ~/timebox)
-Plans: {base}/plans/
-Logs: {base}/logs/
-Reviews: {base}/reviews/
-Goals: {base}/goals/
-```
-
-- 시작 시 `echo $TIMEBOX_HOME`으로 확인. 없으면 `~/timebox` 사용.
+## 경로
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`).
 
 ## 실행 흐름
+
+> **Phase 1 (0-6단계)**: 데이터 분석 + 회고 + 리뷰 파일 저장
+> **Phase 2 (7-9단계)**: 다음 기간 목표 + Foundation 갱신 + 실험 설계
+> Phase 2를 실행하면 `/timebox-align` Refresh를 별도 실행할 필요 없음.
 
 ### 0단계: 데이터 수집
 
@@ -47,7 +42,11 @@ Goals: {base}/goals/
 3. 목표 파일:
    - weekly: `{base}/goals/{올해}-W{해당주}.md`
    - monthly: `{base}/goals/{올해-해당월}.md`
-   - yearly: `{base}/goals/{올해}-foundation.md`, `{base}/goals/{올해}-yearly.md`
+   - yearly: `{base}/goals/{올해}-foundation.md`, `{base}/goals/{올해}.md`
+4. 이전 기간의 주간/월간 리뷰 파일 Read (실험 결과 평가용):
+   - weekly: 지난주 리뷰 `{base}/reviews/{올해}-W{지난주}-weekly-review.md`
+   - monthly: 지난달 리뷰 `{base}/reviews/{올해-지난달}-monthly-review.md`
+   - yearly: 지난해 리뷰 `{base}/reviews/{지난해}-yearly-review.md`
 
 **데이터 부족 시:** 리뷰 파일이 3일 미만(weekly) / 2주 미만(monthly)이면 "기록이 부족합니다. 쌓인 데이터가 많을수록 패턴 분석이 정확해집니다."라고 안내. **억지 결론을 내리지 마라.** 있는 데이터만으로 말할 수 있는 것만 말한다.
 
@@ -92,6 +91,8 @@ Goals: {base}/goals/
 **과계획/저계획 패턴:**
 - Big 3가 실제로 3개 다 끝난 날 비율: {n}%
 - 평균 완료 수: {n}개/일
+- 블록 추정 정확도: daily review의 Estimation Accuracy에서 집계 → 평균 배율 산출 (실제 블록 수는 로그 파일의 `related_to`가 각 Big 3 항목과 매칭되는 건수로 산출)
+  - "추정 대비 평균 {n}배 소요. {작업 유형}이 특히 부정확" 식의 구체적 피드백
 - "Big 3를 2개로 줄이고 보너스 1개를 두는 게 현실적입니다" 식의 제안
 
 **성과 조건 패턴:**
@@ -140,6 +141,8 @@ Goals: {base}/goals/
 - 근거 없는 일반론 금지 ("더 열심히 하세요" 식 X)
 
 ### 6단계: 리뷰 파일 저장
+
+**지난 실험 결과 확인:** 이전 기간 리뷰 파일(0단계에서 수집) 또는 목표 파일의 `## 이번 {기간} 실험` 섹션을 확인하여 지난 실험 결과를 평가한다. 실험이 없었으면 "첫 리뷰 — 지난 실험 없음"으로 기록.
 
 **경로:**
 - weekly: `{base}/reviews/{올해}-W{주차}-weekly-review.md`
@@ -227,9 +230,11 @@ M2: {목표} (Parent: {Y?}) — {근거}
 - yearly: `{base}/goals/{다음해}.md` Write + Foundation 리프레시 제안
 - 주간 목표 파일에는 `## 지난주 리뷰` 섹션에 핵심 인사이트 1-2줄 포함
 
+> **Note:** 이 목표 설정은 `/timebox-align` Refresh를 대체합니다. review에서 목표를 세웠으면 align Refresh는 확인만 합니다.
+
 ### 8단계: Foundation 자기 지식 업데이트
 
-리뷰에서 발견된 **반복 패턴**을 `{base}/goals/_foundation.md`의 `## 자기 지식` 섹션에 축적한다.
+리뷰에서 발견된 **반복 패턴**을 `{base}/goals/{올해}-foundation.md`의 `## 자기 지식` 섹션에 축적한다.
 
 **업데이트 기준:**
 - 2회 이상 반복 확인된 패턴 → 자기 지식에 추가
@@ -238,7 +243,7 @@ M2: {목표} (Parent: {Y?}) — {근거}
 - 더 이상 유효하지 않은 항목 → 삭제 또는 수정
 
 **업데이트 방식:**
-1. `{base}/goals/_foundation.md` Read
+1. `{base}/goals/{올해}-foundation.md` Read
 2. `## 자기 지식` 섹션 확인
 3. 이번 리뷰에서 발견된 패턴과 기존 항목 비교
 4. Edit으로 추가/수정 (절대 다른 섹션 건드리지 않음)
@@ -256,12 +261,16 @@ M2: {목표} (Parent: {Y?}) — {근거}
 ### 회피 트리거
 - {트리거}: {근거}
 
+### 추정 정확도
+- 전체 평균: {n}배 (기간: {확인 기간})
+- {작업 유형별}: {n}배 (예: 리팩토링 1.8x, 신규 개발 2.3x)
+
 ### 검증된 전략
 - {전략}: {실험 기간} → {결과} (출처: {W?? 리뷰})
 ```
 
 **성장 로그:**
-- daily review의 Growth Notes에서 핵심 자각/깨달음을 Foundation `## 성장 로그`에 누적
+- daily review의 Reflection과 Coach's Notes에서 핵심 자각/깨달음을 Foundation `## 성장 로그`에 누적
 - 월간/연간 리뷰 때 성장 로그를 통합 정리
 
 ```markdown

@@ -9,14 +9,8 @@ category: productivity
 `/loop 5m /timebox-loop` 로 사용. 질문 없이 현재 상태만 알려주고 끝.
 사용자 응답을 기다리지 않는다 (AskUserQuestion 사용 금지).
 
-## 경로 설정
-
-```
-Base Path: $TIMEBOX_HOME (환경변수 미설정 시 ~/timebox)
-Plans: {base}/plans/
-```
-
-- 시작 시 `echo $TIMEBOX_HOME`으로 확인. 없으면 `~/timebox` 사용.
+## 경로
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md` (읽기 전용).
 
 ## 실행 흐름
 
@@ -26,7 +20,9 @@ Plans: {base}/plans/
 2. 오늘 타임박스 파일 Read
    - 경로: `{base}/plans/{오늘날짜}.md`
    - **파일 없으면**: 아무것도 출력하지 않고 종료 (loop에서 노이즈 방지)
-3. Schedule 파싱하여 현재 블록 판단
+3. 주간 목표 파일 Read (있으면): `{base}/goals/{올해}-W{이번주}.md` — 코치 넛지의 목표 연결용
+4. Schedule 파싱하여 현재 블록 판단
+5. 오늘 로그 중 최신 1개 Read (있으면): `{base}/logs/{오늘날짜}/` 에서 가장 최근 파일 — 방향 이탈 감지용
 
 ### 2단계: 상황별 알림 (텍스트 출력만)
 

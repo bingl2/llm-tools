@@ -8,16 +8,8 @@ category: productivity
 
 현재 세션에서 수행한 작업을 타임박스 로그로 남기고, 마스터 파일의 체크리스트도 함께 갱신합니다.
 
-## 경로 설정
-
-```
-Base Path: $TIMEBOX_HOME (환경변수 미설정 시 ~/timebox)
-Plans: {base}/plans/
-Logs: {base}/logs/
-```
-
-- 시작 시 `echo $TIMEBOX_HOME`으로 확인. 없으면 `~/timebox` 사용.
-- `{base}/logs/{오늘날짜}/` 디렉토리가 없으면 mkdir로 자동 생성.
+## 경로
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 로그: `{base}/logs/{YYYY-MM-DD}/` (없으면 자동 생성). 마스터 파일은 Read → Edit만 (Write 금지).
 
 ## 실행 흐름
 
@@ -85,7 +77,9 @@ Focus: {Big 3 항목}
 2. 완료된 작업: `- [ ]` → `- [x]` 변환 (Edit)
 3. Big 3 완료 시: `1. [ ]` → `1. [x]` 변환 (Edit)
 4. 새로운 서브태스크 추가 (필요시 Edit)
-5. **반드시 Read 후 Edit 사용. Write 금지.**
+5. Energy Log 테이블에 현재 시각 + energy 값 추가 (Edit):
+   `| {HH:MM} | {energy}/5 | {간단 메모} |`
+6. **반드시 Read 후 Edit 사용. Write 금지.**
 
 ### 5단계: 진행률 안내 + 코치 피드백
 

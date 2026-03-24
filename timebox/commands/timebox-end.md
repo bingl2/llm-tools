@@ -8,18 +8,10 @@ category: productivity
 
 오늘의 타임박스를 리뷰하고, 에너지 패턴을 분석하며, 내일을 준비합니다.
 
-## 경로 설정
+> end는 오늘과 내일을 위한 기록입니다. 패턴 분석과 시스템 피드백은 `/timebox-review`의 역할입니다.
 
-```
-Base Path: $TIMEBOX_HOME (환경변수 미설정 시 ~/timebox)
-Plans: {base}/plans/
-Logs: {base}/logs/
-Reviews: {base}/reviews/
-Goals: {base}/goals/
-```
-
-- 시작 시 `echo $TIMEBOX_HOME`으로 확인. 없으면 `~/timebox` 사용.
-- `{base}/reviews/` 디렉토리가 없으면 mkdir로 자동 생성.
+## 경로
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 리뷰: `{base}/reviews/` (없으면 자동 생성). 마스터 파일은 Read → Edit만 (Write 금지).
 
 ## 실행 흐름
 
@@ -39,6 +31,11 @@ Goals: {base}/goals/
 3. 목표 파일 확인:
    - `{base}/goals/{올해}-W{이번주}.md` (주간 목표) Read (있으면)
    - `{base}/goals/{올해-이번달}.md` (월간 목표) Read (있으면)
+4. `{base}/_config.md` Read (있으면) — `github_sync` 설정 확인용
+5. 각 Big 3의 실제 소요 블록 계산:
+   - 로그 파일의 `related_to` 필드에서 Big 3 항목별 매칭 블록 집계
+   - 블록 수 = 해당 Big 3에 투입된 블록 개수 (부분 투입도 1블록으로 카운트)
+   - 마스터 파일의 Big 3 예상 블록 `(~n블록)`과 비교용
 
 ### 2단계: Big 3 냉정한 리뷰
 
@@ -160,6 +157,13 @@ Energy Log 테이블이 있으면 분석:
 
 Success Rate: {n}/3
 
+## Estimation Accuracy
+| Big 3 | 예상 | 실제 | 배율 |
+|-------|------|------|------|
+| {항목} | {n}블록 | {n}블록 | {n}x |
+
+평균 배율: {n}x
+
 ## Block Analysis
 | Block | Plan | Actual | Match |
 |-------|------|--------|-------|
@@ -176,7 +180,7 @@ Block Adherence: {n}%
 - 목표 직접 기여: {n}블록 ({n}%)
 - 유지/운영: {n}블록
 - 예상 밖: {n}블록
-- 계획을 흔든 요인: {사용자 응답 또는 데이터 기반 분석}
+- 계획을 흔든 요인: {로그의 interrupt/ad-hoc 이벤트에서 추출}
 
 ## Ad-hoc Interruptions
 - {예상 외 작업들}
@@ -194,7 +198,7 @@ Block Adherence: {n}%
 - W1: {목표} → {이번 주 진행률}
 - W2: {목표} → {이번 주 진행률}
 
-### Coaching Notes
+### Carry-over 도전
 - {carry-over 항목에 대한 도전: "이걸 3일째 미루고 있습니다. 정말 해야 하는 건가요, 드롭할 건가요?"}
 - {패턴 기반 제안}
 
@@ -228,16 +232,17 @@ Block Adherence: {n}%
 
 ### 10단계: Git 자동 커밋 + Push
 
-timebox base path가 git repo이면, 변경된 기록을 자동으로 커밋하고 push합니다.
+timebox base path가 git repo이면, 변경된 기록을 자동으로 커밋합니다.
 
 1. `git -C {base} status --porcelain`으로 변경 파일 확인
 2. 변경 없으면 스킵
 3. 변경 있으면:
    - `git -C {base} add plans/ logs/ reviews/ goals/`
    - 커밋 메시지: `{YYYY-MM-DD} timebox — Big 3: {완료}/{전체}, {한줄 요약}`
-   - `git -C {base} push`
-4. remote 설정 확인: `git -C {base} remote -v`
-   - SSH config에 별도 Host가 설정된 경우 (예: `personal`) 해당 Host를 사용
+4. **Push**: `{base}/_config.md`의 `github_sync` 값 확인
+   - `off` (기본값): 커밋만, push 안 함
+   - `on`: 자동 push 실행
+   - remote 설정: `git -C {base} remote -v` (SSH Host 별도 설정 시 해당 Host 사용)
 5. push 실패 시 에러 안내만 하고 진행 (블로커 아님)
 6. "기록 저장 완료 (commit: {hash})" 안내
 

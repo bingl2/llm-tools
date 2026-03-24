@@ -9,14 +9,10 @@ category: productivity
 회의 다녀왔거나, 잠깐 자리 비웠거나, 문득 "나 지금 뭐해야 하지?" 할 때 쓰는 커맨드.
 현재 시각 기준으로 지금 블록과 다음 할 일을 안내하고, 짧은 체크인을 진행합니다.
 
-## 경로 설정
+> loop는 자동 알림(출력만), now는 대화형 체크인(AskUserQuestion 사용)입니다.
 
-```
-Base Path: $TIMEBOX_HOME (환경변수 미설정 시 ~/timebox)
-Plans: {base}/plans/
-```
-
-- 시작 시 `echo $TIMEBOX_HOME`으로 확인. 없으면 `~/timebox` 사용.
+## 경로
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 마스터 파일은 Read → Edit만 (Write 금지).
 
 ## 실행 흐름
 
@@ -26,7 +22,8 @@ Plans: {base}/plans/
 2. 오늘 타임박스 파일 Read
    - 경로: `{base}/plans/{오늘날짜}.md`
    - **파일 없으면**: "`/timebox`로 오늘 플랜을 먼저 생성해주세요." 안내 후 종료
-3. Schedule 섹션을 파싱하여 현재 시각이 어느 블록에 해당하는지 판단
+3. 오늘 로그 Glob: `{base}/logs/{오늘날짜}/*.md` — ad-hoc 카운트 및 방향 이탈 감지용 (있으면)
+4. Schedule 섹션을 파싱하여 현재 시각이 어느 블록에 해당하는지 판단
 
 ### 2단계: 현재 블록 체크인
 
