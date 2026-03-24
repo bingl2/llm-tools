@@ -242,11 +242,22 @@ $TIMEBOX_HOME/
 
 ## 설치
 
-```bash
-claude plugin install timebox
+이 프로젝트의 `timebox/commands/` 디렉토리에 있는 `.md` 파일들을 Claude Code 스킬로 등록하여 사용합니다.
 
-# (선택) 데이터 경로 변경
+```bash
+# 1. 저장소 클론
+git clone https://github.com/bingl2/llm-tools.git
+
+# 2. 프로젝트의 .claude/settings.json에 스킬 경로 등록
+# 또는 CLAUDE.md에서 커맨드 파일을 @import
+
+# 3. (선택) 데이터 경로 변경
 export TIMEBOX_HOME=~/my-timebox   # 기본값: ~/timebox
+
+# 4. 첫 실행
+/timebox-setup    # 시스템 설정
+/timebox-align    # 목표 정렬
+/timebox          # 오늘 하루 설계
 ```
 
 ## 설정
