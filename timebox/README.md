@@ -266,23 +266,29 @@ $TIMEBOX_HOME/
 
 ## 설치
 
-이 프로젝트의 `timebox/commands/` 디렉토리에 있는 `.md` 파일들을 Claude Code 스킬로 등록하여 사용합니다.
+Claude Code에서 `/install` 명령으로 플러그인 마켓플레이스를 열고, 아래 저장소 URL을 등록하면 가장 편합니다:
+
+```
+https://github.com/bingl2/llm-tools.git
+```
+
+또는 직접 클론:
 
 ```bash
-# 1. 저장소 클론
 git clone https://github.com/bingl2/llm-tools.git
+```
 
-# 2. 프로젝트의 .claude/settings.json에 스킬 경로 등록
-# 또는 CLAUDE.md에서 커맨드 파일을 @import
+설치 후 첫 실행:
 
-# 3. (선택) 데이터 경로 변경
-export TIMEBOX_HOME=~/my-timebox   # 기본값: ~/timebox
-
-# 4. 첫 실행
+```bash
 /timebox-setup    # 시스템 설정
 /timebox-align    # 목표 정렬
 /timebox          # 오늘 하루 설계
 ```
+
+## 기여
+
+좋은 아이디어, 개선 제안, 버그 리포트 모두 환영합니다. [PR](https://github.com/bingl2/llm-tools/pulls)이나 [Issue](https://github.com/bingl2/llm-tools/issues)로 남겨주시면 적극 반영하겠습니다.
 
 ## 설정
 
