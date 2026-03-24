@@ -213,13 +213,13 @@ category: productivity
 "리뷰 결과를 바탕으로 다음 {기간} 목표를 제안합니다:
 
 {주간일 때}
-W1: {목표} (Parent: {M?}) — {근거: carry-over / 월간 목표 기반 / 패턴 대응}
-W2: {목표} (Parent: {M?}) — {근거}
-W3: {목표} (Parent: {M?}) — {근거}
+- [W1] {목표} — {근거: carry-over / 월간 목표 기반 / 패턴 대응}  ← Parent: M?
+- [W2] {목표} — {근거}  ← Parent: M?
+- [W3] {목표} — {근거}  ← Parent: M?
 
 {월간일 때}
-M1: {목표} (Parent: {Y?}) — {근거}
-M2: {목표} (Parent: {Y?}) — {근거}
+- [M1] {목표} ({완료 기준}) — {근거}  ← Parent: Y?
+- [M2] {목표} ({완료 기준}) — {근거}  ← Parent: Y?
 
 이 목표들로 시작할까요? 수정하고 싶은 부분이 있으면 말씀해주세요."
 ```
@@ -231,7 +231,23 @@ M2: {목표} (Parent: {Y?}) — {근거}
 - weekly: `{base}/goals/{올해}-W{다음주}.md` Write
 - monthly: `{base}/goals/{올해-다음달}.md` Write + `{base}/goals/{올해}.md` Edit (연간 목표 상태 업데이트)
 - yearly: `{base}/goals/{다음해}.md` Write + Foundation 리프레시 제안
-- 주간 목표 파일에는 `## 지난주 리뷰` 섹션에 핵심 인사이트 1-2줄 포함
+
+**목표 파일 포맷 (CLI 파서 호환 필수):**
+```markdown
+# {기간} 목표
+
+## Goals
+
+- [W1] 목표 텍스트
+- [W2] 목표 텍스트 (성공 기준이 있으면 괄호 안에)
+
+## Notes
+
+- W1 → M1, W2 → M2 (Parent 매핑)
+- 지난주 핵심 인사이트 1-2줄
+```
+- `## Goals` 섹션의 `- [ID] 텍스트 (기준)` 포맷이 CLI가 파싱하는 영역
+- `## Notes` 섹션은 CLI가 무시하지만 Claude가 읽는 메타데이터 (Parent 매핑, 맥락)
 
 > **Note:** review의 목표 설정은 데이터 기반 자연 갱신입니다 (주간/월간 전환기의 정기 회고). `/timebox-align`은 방향 전환(이직, 큰 목표 변경 등) 시 사용자가 직접 실행하여 입력 기반으로 재정렬합니다. review에서 이미 목표를 세웠으면 align Refresh는 확인만 합니다.
 
