@@ -24,14 +24,15 @@ Claude는 이 과정에서:
 
 ### 1단계: 기존 데이터 확인
 
-1. `{base}/goals/{올해}-foundation.md` 존재 여부 확인
-2. `{base}/goals/{올해}.md` 존재 여부 확인
-3. `{base}/goals/{올해-이번달}.md` 존재 여부 확인
-4. `{base}/goals/{올해}-W{이번주}.md` 존재 여부 확인
+CLI로 각 스코프의 목표 존재 여부를 확인:
+1. `timebox goals show --scope yearly` → 에러면 연간 목표 없음
+2. `timebox goals show --scope monthly` → 에러면 월간 목표 없음
+3. `timebox goals show --scope weekly` → 에러면 주간 목표 없음
+4. foundation.md 존재 여부: `{base}/goals/{올해}-foundation.md` Read (CLI에 해당 커맨드 없음)
 
 **모드 자동 판별:**
-- **Cold Start**: {올해}-foundation.md 없음 → 처음부터 전부 세팅
-- **Refresh**: {올해}-foundation.md 있음 + 주간 목표가 지난 주 이전 + `/timebox-review`를 실행하지 않은 경우 → 주간/월간 업데이트 (review의 fallback)
+- **Cold Start**: foundation.md 없음 → 처음부터 전부 세팅
+- **Refresh**: foundation.md 있음 + 주간 목표가 지난 주 이전 + `/timebox-review`를 실행하지 않은 경우 → 주간/월간 업데이트 (review의 fallback)
 - **Realign**: 사용자가 방향 전환을 요청 (이직, 큰 목표 변경, 새로운 도전 시작 등) → Foundation부터 재검토. 사용자에게 "왜 align을 하려는지" 입력을 받아 맥락을 파악한 후 진행
 
 ## Cold Start 모드
@@ -276,11 +277,10 @@ Parent: 유지
 
 ### 1단계: 지난주 리뷰 수집
 
-1. `{base}/reviews/` 에서 지난주 daily review 파일들 Read
-2. `{base}/reviews/{올해}-W{지난주}-weekly-review.md` Read (있으면 — `/timebox-review`로 생성된 주간 리뷰)
-3. `{base}/goals/{올해}-W{지난주}.md` Read
-4. `{base}/goals/{올해}-foundation.md` Read (자기 지식 섹션 참조)
-5. 주간 목표별 달성률 계산
+1. `timebox goals show --scope weekly --week {지난주}` → 지난주 목표 JSON
+2. `timebox goals progress --week {지난주}` → 지난주 목표 진행률 JSON
+3. `{base}/reviews/{올해}-W{지난주}-weekly-review.md` Read (있으면 — `/timebox-review`로 생성된 주간 리뷰, CLI 미지원)
+4. `{base}/goals/{올해}-foundation.md` Read (자기 지식 섹션 참조, CLI 미지원)
 
 ### 2단계: 리뷰 요약 제시
 

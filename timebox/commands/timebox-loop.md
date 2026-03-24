@@ -10,19 +10,15 @@ category: productivity
 질문 없이 현재 상태만 알려주고 끝. 사용자 응답을 기다리지 않는다 (AskUserQuestion 사용 금지).
 
 ## 경로
-`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md` (읽기 전용).
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회는 `timebox` CLI를 사용한다.
 
 ## 실행 흐름
 
 ### 1단계: 상태 확인
 
-1. `date +%H:%M`으로 현재 시각 확인
-2. 오늘 타임박스 파일 Read
-   - 경로: `{base}/plans/{오늘날짜}.md`
-   - **파일 없으면**: 아무것도 출력하지 않고 종료 (loop에서 노이즈 방지)
-3. 주간 목표 파일 Read (있으면): `{base}/goals/{올해}-W{이번주}.md` — 코치 넛지의 목표 연결용
-4. Schedule 파싱하여 현재 블록 판단
-5. 오늘 로그 중 최신 1개 Read (있으면): `{base}/logs/{오늘날짜}/` 에서 가장 최근 파일 — 방향 이탈 감지용
+1. `timebox now` 실행 → JSON으로 현재 블록, 남은 시간, 다음 체크리스트 항목, ad-hoc 카운트 확보
+   - **에러(PLAN_NOT_FOUND)면**: 아무것도 출력하지 않고 종료 (loop에서 노이즈 방지)
+2. 코치 넛지에 목표 연결이 필요하면: `timebox goals show --scope weekly` 실행 (에러면 스킵)
 
 ### 2단계: 상황별 알림 (텍스트 출력만)
 
@@ -128,5 +124,5 @@ category: productivity
 ## 참고
 
 - 체크인 주기는 `/timebox`에서 설정 (기본값: _config.md의 checkin_interval)
-- 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md`
+- 데이터 조회: `timebox now` (현재 블록), `timebox goals show` (목표)
 - 마스터 파일 수정하지 않음 (읽기 전용)

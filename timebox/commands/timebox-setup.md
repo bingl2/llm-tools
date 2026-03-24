@@ -20,11 +20,12 @@ category: productivity
 - **최초 설치** (환경변수 없음): → 2단계부터 전부 실행
 - **설정 변경** (_config.md 있음): → 현재 설정 보여주고 "무엇을 바꾸시겠습니까?" 질문
 
-### 2단계: 경로 설정 (최초 설치 시)
+### 2단계: 초기화 + 경로 설정 (최초 설치 시)
 
 1. AskUserQuestion: "타임박스 데이터를 저장할 경로를 정해주세요. (기본값: ~/timebox)"
 2. 사용자가 경로를 지정하면 해당 경로, Enter만 치면 `~/timebox` 사용
-3. 디렉토리 구조 생성: `mkdir -p {base}/{plans,logs,reviews,goals}`
+3. **CLI로 초기화**: `timebox init --home-override {경로}` 실행
+   - 디렉토리 구조(plans, logs, reviews, goals)와 기본 `_config.md`를 자동 생성
 4. 쉘 프로필에 환경변수 추가:
    - `$SHELL`에 따라 `~/.zshrc` (zsh) 또는 `~/.bashrc` (bash)에:
      ```
@@ -34,11 +35,11 @@ category: productivity
 5. "TIMEBOX_HOME={경로}로 설정했습니다. 새 터미널부터 자동 적용됩니다." 안내
 6. 현재 Claude Code 세션에서도 사용하기 위해 `export TIMEBOX_HOME="{경로}"` 실행
 
-### 3단계: 운영 설정 입력 + 설정 파일 생성
+### 3단계: 운영 설정 커스텀
 
 **최초 설치 시:**
 
-AskUserQuestion으로 핵심 운영 설정을 확인합니다:
+`timebox init`이 기본 `_config.md`를 생성한 뒤, AskUserQuestion으로 핵심 운영 설정을 확인합니다:
 
 1. "Deep Work 블록 길이를 정해주세요. (기본값: 90분)"
    - 60분, 90분, 120분 등 사용자 선호에 따라 설정
@@ -46,7 +47,9 @@ AskUserQuestion으로 핵심 운영 설정을 확인합니다:
 2. "체크인 루프 주기를 정해주세요. (기본값: 15분)"
    - `/loop {n}m /timebox-loop`으로 자동 알림이 이 주기로 실행됩니다
 
-사용자가 Enter만 치면 기본값 사용. 입력값으로 `{base}/_config.md` 생성:
+사용자가 Enter만 치면 기본값(90분, 15분) 유지. 변경이 있으면 `{base}/_config.md`를 Read 후 Edit으로 해당 값만 수정.
+
+**_config.md 구조** (init이 생성하는 기본값):
 
 ```markdown
 # Timebox Config

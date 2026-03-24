@@ -18,7 +18,7 @@ category: productivity
 ```
 
 ## 경로
-`$TIMEBOX_HOME` (미설정 시 `~/timebox`).
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회는 `timebox` CLI를 사용한다.
 
 ## 실행 흐름
 
@@ -33,22 +33,22 @@ category: productivity
 - monthly: 이번 달 1일~오늘 (또는 지난 달 전체)
 - yearly: 올해 1월~오늘 (월간 리뷰 파일을 1차 소스로 사용. 월간 리뷰가 없는 달만 daily review로 보충)
 
-**읽을 파일:**
-1. 해당 기간의 daily review 파일들:
-   - Glob 패턴: `{base}/reviews/{YYYY-MM-DD}-timebox-review.md`
-   - 기간에 해당하는 날짜만 필터
-2. 해당 기간의 로그 파일들:
-   - Glob 패턴: `{base}/logs/{YYYY-MM-DD}/*.md`
-3. 목표 파일:
-   - weekly: `{base}/goals/{올해}-W{해당주}.md`
-   - monthly: `{base}/goals/{올해-해당월}.md`
-   - yearly: `{base}/goals/{올해}-foundation.md`, `{base}/goals/{올해}.md`
-4. 이전 기간의 주간/월간 리뷰 파일 Read (실험 결과 평가용):
-   - weekly: 지난주 리뷰 `{base}/reviews/{올해}-W{지난주}-weekly-review.md`
-   - monthly: 지난달 리뷰 `{base}/reviews/{올해-지난달}-monthly-review.md`
-   - yearly: 지난해 리뷰 `{base}/reviews/{지난해}-yearly-review.md`
+**CLI로 데이터 수집:**
+1. 기간 통계:
+   - weekly: `timebox stats week [--year YYYY --week WW]` → 주간 통계 JSON (Big 3 달성률, 블록 준수율, 에너지 등)
+   - monthly: `timebox stats month [--year YYYY --month MM]` → 월간 통계 JSON
+   - yearly: 월간 통계를 월별로 조회하거나, 월간 리뷰 파일을 직접 Read
+2. 목표 데이터:
+   - `timebox goals show --scope {weekly|monthly|yearly}` → 해당 스코프 목표 JSON
+   - `timebox goals progress` → 주간 목표 진행률 JSON
+3. carry-over: `timebox stats carry-over` → 연속 미완료 항목
+4. 이전 기간 리뷰 파일 (실험 결과 평가용, CLI 미지원 → 직접 Read):
+   - weekly: `{base}/reviews/{올해}-W{지난주}-weekly-review.md`
+   - monthly: `{base}/reviews/{올해-지난달}-monthly-review.md`
+   - yearly: `{base}/reviews/{지난해}-yearly-review.md`
+5. Foundation: `{base}/goals/{올해}-foundation.md` Read (CLI 미지원)
 
-**데이터 부족 시:** 리뷰 파일이 3일 미만(weekly) / 2주 미만(monthly)이면 "기록이 부족합니다. 쌓인 데이터가 많을수록 패턴 분석이 정확해집니다."라고 안내. **억지 결론을 내리지 마라.** 있는 데이터만으로 말할 수 있는 것만 말한다.
+**데이터 부족 시:** stats 결과의 days 배열이 3일 미만(weekly) / 2주 미만(monthly)이면 "기록이 부족합니다. 쌓인 데이터가 많을수록 패턴 분석이 정확해집니다."라고 안내. **억지 결론을 내리지 마라.** 있는 데이터만으로 말할 수 있는 것만 말한다.
 
 ### 1단계: 성과 요약
 
@@ -143,6 +143,9 @@ category: productivity
 ### 6단계: 리뷰 파일 저장
 
 **지난 실험 결과 확인:** 이전 기간 리뷰 파일(0단계에서 수집) 또는 목표 파일의 `## 이번 {기간} 실험` 섹션을 확인하여 지난 실험 결과를 평가한다. 실험이 없었으면 "첫 리뷰 — 지난 실험 없음"으로 기록.
+
+**파일 생성 방법:**
+- weekly/monthly/yearly 리뷰 파일은 Write 도구로 직접 생성 (CLI는 daily review만 지원)
 
 **경로:**
 - weekly: `{base}/reviews/{올해}-W{주차}-weekly-review.md`
@@ -320,10 +323,16 @@ M2: {목표} (Parent: {Y?}) — {근거}
 
 ## 참고
 
+- 주간 통계: `timebox stats week [--year YYYY --week WW]`
+- 월간 통계: `timebox stats month [--year YYYY --month MM]`
+- 목표 조회: `timebox goals show --scope {weekly|monthly|yearly}`
+- 목표 진행률: `timebox goals progress`
+- carry-over: `timebox stats carry-over`
+- foundation.md, 이전 기간 리뷰 파일은 직접 Read (CLI 미지원)
+- 리뷰 파일(weekly/monthly/yearly)은 Write로 직접 생성 (CLI는 daily review만 지원)
 - 데이터가 부족하면 억지 결론을 내리지 않는다. "데이터 부족"이라고 솔직히 말한다.
-- 수치는 반드시 실제 파일에서 세어서 계산한다. 추정/감 금지.
+- 수치는 CLI stats 결과(JSON)를 사용한다. 직접 세거나 추정하지 않는다.
 - 기존 timebox-end의 7단계(주간 목표 체크)는 이 커맨드로 대체된다.
-- **리뷰 파일은 Write로 생성. 기존 파일이 있으면 Read 후 Write로 덮어쓰기.**
 - **목표 파일 생성은 Write, 기존 목표 파일 수정은 Read 후 Edit.**
 - **Foundation 수정은 반드시 Read 후 Edit. 자기 지식/성장 로그 섹션만 수정하고 다른 섹션은 절대 건드리지 않는다.**
 - 7-9단계는 데이터 부족 경고가 떠도 실행한다. 패턴이 약해도 목표 설정과 실험은 할 수 있다.

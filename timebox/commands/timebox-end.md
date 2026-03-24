@@ -11,7 +11,7 @@ category: productivity
 > end는 오늘과 내일을 위한 기록입니다. 패턴 분석과 시스템 피드백은 `/timebox-review`의 역할입니다.
 
 ## 경로
-`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 리뷰: `{base}/reviews/` (없으면 자동 생성). 마스터 파일은 Read → Edit만 (Write 금지).
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회/생성은 `timebox` CLI를 사용한다.
 
 ## 실행 흐름
 
@@ -23,22 +23,13 @@ category: productivity
 
 ### 1단계: 데이터 수집
 
-1. 오늘 타임박스 파일 Read
-   - 경로: `{base}/plans/{오늘날짜}.md`
-   - **파일 없으면**: "오늘 타임박스 파일이 없습니다." 안내 후 종료
-2. 오늘 로그 파일 전부 Read
-   - Glob 패턴: `{base}/logs/{오늘날짜}/*.md`
-3. 목표 파일 확인:
-   - `{base}/goals/{올해}-W{이번주}.md` (주간 목표) Read (있으면)
-   - `{base}/goals/{올해-이번달}.md` (월간 목표) Read (있으면)
-4. `{base}/_config.md` Read (있으면) — `github_sync` 설정 및 `deep_work_block` 확인용
-5. 최근 2-3일 daily review 파일 Read (있으면):
-   - Glob 패턴: `{base}/reviews/*-timebox-review.md` 에서 최근 2-3개
-   - carry-over 기간 판단용 (같은 Big 3가 며칠째 미완료인지 추적)
-6. 각 Big 3의 실제 소요 블록 계산:
-   - 로그 파일의 `related_to` 필드에서 Big 3 항목별 매칭 블록 집계 (`Big 1`, `Big 2`, `Big 3`으로 매칭)
-   - 블록 수 = 해당 Big 3에 투입된 블록 개수 (1블록 = `_config.md`의 `deep_work_block` 설정. 블록의 절반 이상 투입 시 1블록, 미만이면 0.5블록)
-   - 마스터 파일의 Big 3 예상 블록 `(~n블록)`과 비교용
+1. `timebox stats today` 실행 → JSON으로 Big 3 완료율, 블록 준수율, 에너지, ad-hoc 카운트, 목표 정렬, Estimation Accuracy(예상 대비 실제 블록 배율) 확보
+   - **에러(PLAN_NOT_FOUND)면**: "오늘 타임박스 파일이 없습니다." 안내 후 종료
+2. 목표 데이터:
+   - `timebox goals show --scope weekly` → 주간 목표 JSON (에러면 스킵)
+   - `timebox goals show --scope monthly` → 월간 목표 JSON (에러면 스킵)
+3. carry-over 판단: `timebox stats carry-over` → 연속 미완료 항목 확인
+4. `{base}/_config.md` Read (있으면) — `github_sync` 설정 확인용 (CLI 미지원)
 
 ### 2단계: Big 3 냉정한 리뷰
 
@@ -148,77 +139,34 @@ Energy Log 테이블이 있으면 분석:
 
 ### 7단계: Review 파일 생성
 
-**경로**: `{base}/reviews/{YYYY-MM-DD}-timebox-review.md`
+코칭 대화에서 수집한 리뷰 데이터를 JSON으로 조립하여 CLI로 생성합니다:
 
-```markdown
-# {YYYY-MM-DD} ({요일}) Timebox Review
-
-## Big 3 Results
-1. {상태} {항목} → {결과}
-2. {상태} {항목} → {결과}
-3. {상태} {항목} → {결과}
-
-Success Rate: {n}/3
-
-## Estimation Accuracy
-| Big 3 | 예상 | 실제 | 배율 |
-|-------|------|------|------|
-| {항목} | {n}블록 | {n}블록 | {n}x |
-
-평균 배율: {n}x
-
-## Block Analysis
-| Block | Plan | Actual | Match |
-|-------|------|--------|-------|
-| ... | ... | ... | ... |
-
-Block Adherence: {n}%
-
-## Energy Pattern
-- Peak: {시간대}
-- Low: {시간대}
-- Recommendation: {내일 제안}
-
-## Goal Alignment
-- 목표 직접 기여: {n}블록 ({n}%)
-- 유지/운영: {n}블록
-- 예상 밖: {n}블록
-- 계획을 흔든 요인: {로그의 interrupt/ad-hoc 이벤트에서 추출}
-
-## Ad-hoc Interruptions
-- {예상 외 작업들}
-
-## Carry Forward
-### 내일 Big 3 후보
-1. {carry-over 또는 새 항목}
-2. {후보}
-3. {후보}
-
-### 오픈 루프
-- {완료되지 않은 진행중 작업, 대기 중인 리뷰, 블로커 등}
-
-### Weekly Goal Progress
-- W1: {목표} → {이번 주 진행률}
-- W2: {목표} → {이번 주 진행률}
-
-### Carry-over 도전
-- {carry-over 항목에 대한 도전: "이걸 3일째 미루고 있습니다. 정말 해야 하는 건가요, 드롭할 건가요?"}
-- {패턴 기반 제안}
-
-### Notes
-{내일 참고할 메모}
-
-## Daily One-liner
-> {하루 한줄평 — 기분, 느낌, 깨달은 것}
-
-## Reflection
-{사용자가 쓴 리플렉션 원문 그대로 보존. 한 줄이든 한 페이지든. 정리/요약/교정하지 않는다.}
-
-## Coach's Notes
-{Claude 작성 — 2-3줄 핵심 분석}
-> When-Then: {다음에 [상황]이 오면, [행동]한다}
-> 질문: {내일 생각해볼 질문}
+```bash
+echo '{
+  "date": "{YYYY-MM-DD}",
+  "weekday": "{요일}",
+  "big3_results": [
+    {"number": 1, "text": "{항목}", "status": "done", "result": "{결과}", "estimated_blocks": 2, "actual_blocks": 2}
+  ],
+  "success_rate": "1/3",
+  "block_analysis": [
+    {"block": "09:00-10:30 Deep", "plan": "{계획}", "actual": "{실제}", "match": true}
+  ],
+  "block_adherence": 50,
+  "energy_pattern": {"peak": "{시간대}", "low": "{시간대}", "recommendation": "{제안}"},
+  "goal_alignment": {"direct": 3, "maintenance": 1, "unexpected": 1, "disruptors": "{요인}"},
+  "ad_hoc": ["{예상 외 작업}"],
+  "carry_forward": {"tomorrow_candidates": ["{항목}"], "open_loops": ["{루프}"], "weekly_progress": ["{진행}"]},
+  "carry_over_challenge": "{도전 메시지}",
+  "daily_one_liner": "{한줄평}",
+  "reflection": "{사용자 원문 그대로}",
+  "coach_notes": "{Claude 작성 코치 노트}",
+  "when_then": "{다음에 [상황]이 오면, [행동]한다}",
+  "coach_question": "{내일 생각해볼 질문}"
+}' | timebox review create
 ```
+
+CLI가 `{base}/reviews/{YYYY-MM-DD}-timebox-review.md` 파일을 자동 생성합니다.
 
 ### 8단계: 주간 리뷰 안내 (금요일/주말)
 
@@ -235,24 +183,24 @@ Block Adherence: {n}%
 
 ### 10단계: Git 자동 커밋 + Push
 
-timebox base path가 git repo이면, 변경된 기록을 자동으로 커밋합니다.
+CLI로 timebox 데이터 파일을 자동 커밋합니다:
 
-1. `git -C {base} status --porcelain`으로 변경 파일 확인
-2. 변경 없으면 스킵
-3. 변경 있으면:
-   - `git -C {base} add plans/ logs/ reviews/ goals/`
-   - 커밋 메시지: `{YYYY-MM-DD} timebox — Big 3: {완료}/{전체}, {한줄 요약}`
-4. **Push**: `{base}/_config.md`의 `github_sync` 값 확인
-   - `off` (기본값): 커밋만, push 안 함
-   - `on`: 자동 push 실행
-   - remote 설정: `git -C {base} remote -v` (SSH Host 별도 설정 시 해당 Host 사용)
-5. push 실패 시 에러 안내만 하고 진행 (블로커 아님)
-6. "기록 저장 완료 (commit: {hash})" 안내
+```bash
+# _config.md의 github_sync가 on이면 --push 추가
+timebox commit [--push]
+```
+
+- CLI가 plans/, logs/, reviews/, goals/ 변경 파일을 자동 staging + 커밋
+- 변경 없으면 자동 스킵
+- push 실패 시 에러 안내만 하고 진행 (블로커 아님)
+- "기록 저장 완료 (commit: {hash})" 안내
 
 ## 참고
 
-- 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md`
-- Review 파일: `{base}/reviews/{YYYY-MM-DD}-timebox-review.md`
-- 로그 경로: `{base}/logs/{YYYY-MM-DD}/`
+- 오늘 통계: `timebox stats today`
+- 목표 조회: `timebox goals show --scope {weekly|monthly}`
+- carry-over: `timebox stats carry-over`
+- 리뷰 생성: `echo '{json}' | timebox review create`
+- Git 커밋: `timebox commit [--push]`
+- _config.md는 직접 Read (CLI 미지원)
 - Energy Log가 비어있으면 에너지 분석 스킵
-- **마스터 파일은 Read 후 Edit만 사용. Write 금지.**

@@ -12,18 +12,15 @@ category: productivity
 > loop는 자동 알림(출력만), now는 대화형 체크인(AskUserQuestion 사용)입니다.
 
 ## 경로
-`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 마스터 파일은 Read → Edit만 (Write 금지).
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회/수정은 `timebox` CLI를 사용한다.
 
 ## 실행 흐름
 
 ### 1단계: 현재 상태 파악
 
-1. `date +%H:%M`으로 현재 시각 확인
-2. 오늘 타임박스 파일 Read
-   - 경로: `{base}/plans/{오늘날짜}.md`
-   - **파일 없으면**: "`/timebox`로 오늘 플랜을 먼저 생성해주세요." 안내 후 종료
-3. 오늘 로그 Glob: `{base}/logs/{오늘날짜}/*.md` — ad-hoc 카운트 및 방향 이탈 감지용 (있으면)
-4. Schedule 섹션을 파싱하여 현재 시각이 어느 블록에 해당하는지 판단
+1. `timebox now` 실행 → JSON으로 현재 블록, 남은 시간, 다음 체크리스트 항목, ad-hoc 카운트 확보
+   - **에러(PLAN_NOT_FOUND)면**: "`/timebox`로 오늘 플랜을 먼저 생성해주세요." 안내 후 종료
+2. JSON 결과를 바탕으로 현재 시각이 어느 블록에 해당하는지 판단
 
 ### 2단계: 현재 블록 체크인
 
@@ -89,21 +86,23 @@ category: productivity
 체크인 시 에너지 레벨을 물어봅니다 (1-5 또는 스킵).
 에너지 = **지금 집중할 수 있는 상태**: 1 거의 못함, 2 낮음, 3 보통, 4 좋음, 5 최고 집중.
 축적되면 최적 Deep Work 시간대를 찾는 데 활용됨.
-- 응답하면 마스터 파일의 Energy Log 테이블에 Edit으로 추가:
-
-```
-| 10:30 | 4/5 | 집중 잘 됨, 다음 블록도 OK |
-```
+- 응답하면 CLI로 Energy Log에 추가:
+  ```bash
+  timebox plan energy --time {HH:MM} --level {1-5} --notes "{간단 메모}"
+  ```
 
 ### 4단계: 마스터 파일 업데이트
 
-- 완료된 작업이 있으면 `- [ ]` → `- [x]` 변환 (Edit)
-- 블록 조정이 있으면 시간 수정 (Edit)
-- **반드시 Read 후 Edit 사용. Write 금지.**
+- 완료된 작업이 있으면 CLI로 체크리스트 토글:
+  ```bash
+  timebox plan check --item "{완료된 항목 텍스트}"
+  ```
+- 블록 조정이 있으면 마스터 파일을 Read 후 시간 수정 (Edit) — CLI에 블록 시간 수정 기능은 없음
 
 ## 참고
 
-- 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md`
-- 블록 시간 파싱: `### HH:MM-HH:MM | 블록타입` 패턴으로 매칭
+- 데이터 조회: `timebox now` (현재 블록 JSON)
+- 체크리스트 토글: `timebox plan check --item "텍스트"`
+- 에너지 기록: `timebox plan energy --time HH:MM --level N`
 - 에너지 체크인은 선택사항, 스킵 가능
 - 체크인은 30초-1분 이내로 빠르게 진행

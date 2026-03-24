@@ -9,7 +9,7 @@ category: productivity
 타임박싱 방식으로 하루를 설계합니다. Big 3(오늘의 핵심 3가지)를 정하고, 시간 블록으로 배치합니다.
 
 ## 경로
-`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 없는 하위 디렉토리는 자동 생성.
+`$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회/생성은 `timebox` CLI를 사용한다.
 
 ## 핵심 철학
 
@@ -23,17 +23,17 @@ category: productivity
 ### 1단계: 날짜 및 컨텍스트 확인
 
 1. 오늘 날짜와 요일 확인
-2. `{base}/goals/` 에서 목표 파일 확인:
-   - `{올해}-foundation.md` Read (있으면) — 방향, 제약 로드. 자기 지식 섹션이 있으면 함께 로드
-   - `_config.md` Read (있으면) — 체크인 주기, 블록 길이 등 운영 설정 로드
-   - `{올해}.md` (연간 목표) Read (있으면)
-   - `{올해-이번달}.md` (월간 목표) Read (있으면)
-   - `{올해}-W{이번주}.md` (주간 목표) Read (있으면)
-3. `{base}/plans/` 에서 가장 최근 파일을 Glob으로 확인
-   - 있으면 Read하여 어제의 미완료 Big 3, 에너지 패턴 참고
-4. `{base}/reviews/` 에서 가장 최근 review 파일 확인
-   - 있으면 Tomorrow Candidates 참조
-5. Google Calendar MCP가 연동되어 있으면(`_config.md`의 `google_calendar: on`) 오늘 일정 조회하여 고정 블록으로 예약
+2. 목표 데이터 수집 (CLI + 직접 Read 병행):
+   - `{base}/goals/{올해}-foundation.md` Read (있으면) — 방향, 제약, 자기 지식 로드 (CLI 미지원)
+   - `{base}/_config.md` Read (있으면) — 체크인 주기, 블록 길이 등 운영 설정 로드 (CLI 미지원)
+   - `timebox goals show --scope yearly` → 연간 목표 JSON (에러면 없는 것)
+   - `timebox goals show --scope monthly` → 월간 목표 JSON (에러면 없는 것)
+   - `timebox goals show --scope weekly` → 주간 목표 JSON (에러면 없는 것)
+3. 어제 플랜/리뷰 확인:
+   - `timebox plan show --date {어제날짜}` → 어제 미완료 Big 3, 에너지 패턴 참고 (에러면 없는 것)
+   - `timebox review show --date {어제날짜}` → Tomorrow Candidates 참조 (에러면 없는 것)
+   - `timebox stats carry-over` → carry-over 연속일 확인
+4. Google Calendar MCP가 연동되어 있으면(`_config.md`의 `google_calendar: on`) 오늘 일정 조회하여 고정 블록으로 예약
 
 **goals 파일이 없으면:**
 - "목표 파일이 아직 없습니다. `/timebox-setup`으로 시스템 설정 후 `/timebox-align`으로 목표를 설정하시겠습니까?"
@@ -41,16 +41,16 @@ category: productivity
 
 ### 2단계: 마스터 파일 확인
 
-`{base}/plans/{오늘날짜}.md` 파일 존재 여부 확인
+`timebox plan show` 실행하여 오늘 플랜 존재 여부 확인
 
-**파일이 이미 존재하면**:
-- 현재 내용을 Read하여 사용자에게 보여줍니다
+**플랜이 이미 존재하면** (JSON 정상 반환):
+- 결과를 사용자에게 보여줍니다
 - AskUserQuestion: "오늘 타임박스가 이미 있습니다. 어떻게 하시겠습니까?"
   - 블록 추가/수정
   - 처음부터 다시
   - 현재 상태 확인만
 
-**파일이 없으면**: 3단계로 진행
+**에러(PLAN_NOT_FOUND)면**: 3단계로 진행
 
 ### 3단계: 목표 정렬 + Big 3 코칭 대화
 
@@ -165,9 +165,34 @@ Claude가 먼저 정리해서 보여줌:
 
 ### 5단계: 마스터 파일 생성
 
-Write 도구로 파일을 생성합니다.
+코칭 대화에서 확정된 Big 3와 블록 배치를 JSON으로 조립하여 CLI로 생성합니다:
 
-**경로**: `{base}/plans/{YYYY-MM-DD}.md`
+```bash
+echo '{
+  "weekday": "{요일}",
+  "big3": [
+    {"number": 1, "text": "{핵심 과제 1}", "estimated_blocks": {n}},
+    {"number": 2, "text": "{핵심 과제 2}", "estimated_blocks": {n}},
+    {"number": 3, "text": "{핵심 과제 3}", "estimated_blocks": {n}}
+  ],
+  "blocks": [
+    {"start": "09:00", "end": "10:30", "block_type": "deep-work", "focus": "{Big 3 #1}"},
+    {"start": "10:30", "end": "10:45", "block_type": "break", "focus": "체크인"},
+    {"start": "10:45", "end": "12:00", "block_type": "deep-work", "focus": "{Big 3 #2}"},
+    {"start": "12:00", "end": "13:00", "block_type": "lunch", "focus": null},
+    {"start": "13:00", "end": "14:00", "block_type": "shallow", "focus": "이메일/리뷰"},
+    {"start": "14:00", "end": "15:30", "block_type": "deep-work", "focus": "{Big 3 #3}"},
+    {"start": "15:30", "end": "15:45", "block_type": "break", "focus": "체크인"},
+    {"start": "15:45", "end": "17:00", "block_type": "flex", "focus": null},
+    {"start": "17:00", "end": "17:30", "block_type": "wrap-up", "focus": "/timebox-end"}
+  ],
+  "notes": ""
+}' | timebox plan create
+```
+
+CLI가 `{base}/plans/{YYYY-MM-DD}.md` 마크다운 파일을 자동 생성합니다.
+
+**생성되는 마크다운 구조** (참고용):
 
 ```markdown
 # {YYYY-MM-DD} ({요일}) Timebox
@@ -178,45 +203,15 @@ Write 도구로 파일을 생성합니다.
 3. [ ] {핵심 과제 3} (~{n}블록)
 
 ## Schedule
-
 ### 09:00-10:30 | Deep Work
 **Focus**: {Big 3 #1}
-- [ ] {구체적 작업}
-- [ ] {구체적 작업}
-
-### 10:30-10:45 | Break
-> 체크인: 집중도? 다음 블록 조정?
-
-### 10:45-12:00 | Deep Work
-**Focus**: {Big 3 #2 또는 #1 계속}
-- [ ] {구체적 작업}
-
-### 12:00-13:00 | Lunch
-
-### 13:00-14:00 | Shallow Work
-- [ ] 이메일/슬랙 처리
-- [ ] 코드리뷰
-- [ ] {기타 경량 작업}
-
-### 14:00-15:30 | Deep Work
-**Focus**: {Big 3 #3}
-- [ ] {구체적 작업}
-
-### 15:30-15:45 | Break
-> 체크인: 오후 에너지? 남은 블록 계획?
-
-### 15:45-17:00 | Flex
-> 미완료 블록 이어하기 또는 ad-hoc 처리
-
-### 17:00-17:30 | Wrap-up
-> `/timebox-end`로 마감
+...
 
 ## Energy Log
 | Time | Energy | Notes |
 |------|--------|-------|
 
 ## Notes
-
 ```
 
 **블록 타입 설명**:
@@ -263,8 +258,12 @@ Write 도구로 파일을 생성합니다.
 
 ## 참고사항
 
-- 마스터 파일 경로: `{base}/plans/{YYYY-MM-DD}.md`
-- 목표 파일 경로: `{base}/goals/`
+- 목표 조회: `timebox goals show --scope {yearly|monthly|weekly}`
+- 플랜 조회: `timebox plan show [--date YYYY-MM-DD]`
+- 리뷰 조회: `timebox review show [--date YYYY-MM-DD]`
+- 플랜 생성: `echo '{json}' | timebox plan create [--date YYYY-MM-DD]`
+- carry-over 확인: `timebox stats carry-over`
+- foundation.md, _config.md는 직접 Read (CLI 미지원)
 - 블록 기본 길이: Deep Work 90분, Shallow 60분, Break 15분 (`_config.md`에서 변경 가능)
 - **1블록 = `_config.md`의 `deep_work_block` 설정 시간** (기본 90분). 블록 길이가 날마다 달라도 Estimation Accuracy의 배율(예상 대비 실제)은 비교 가능
 - 사용자 근무시간에 맞게 블록을 조정 가능
