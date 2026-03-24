@@ -61,7 +61,7 @@ graph TD
 
     subgraph DAILY ["매일 — 하루의 사이클"]
         TB["/timebox<br/>아침 설계"]
-        TB -->|"Big 3 + 시간 블록 생성"| LOOP["/timebox-loop · 자동 체크"]
+        TB --> LOOP["/timebox-loop · 자동 체크"]
         TB --> NOW["/timebox-now · 지금 뭐하지?"]
         TB --> LOG["/timebox-log · 작업 기록"]
         LOOP --> END["/timebox-end<br/>하루 마감"]
