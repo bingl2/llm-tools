@@ -26,7 +26,7 @@ Goals: {base}/goals/
 ### 0단계: 체크인 루프 해제
 
 1. CronList로 현재 활성 cron 목록 조회
-2. `/timebox-check` 프롬프트를 가진 recurring job을 찾아 CronDelete로 해제
+2. `/timebox-loop` 프롬프트를 가진 recurring job을 찾아 CronDelete로 해제
 3. "체크인 루프 해제 완료" 안내
 
 ### 1단계: 데이터 수집

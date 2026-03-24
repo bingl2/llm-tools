@@ -1,36 +1,32 @@
 ---
-name: timebox-init
-description: "목표 정렬 인터뷰 코치 - Foundation/연간/월간/주간 목표 설정"
+name: timebox-align
+description: "목표 정렬 코칭 - Foundation/연간/월간/주간 목표 설정 및 갱신"
 category: productivity
 ---
 
-# /timebox-init - 목표 정렬 인터뷰 코치
+# /timebox-align - 목표 정렬 코칭
 
-타임박스 시스템의 뿌리를 세우는 대화형 코칭입니다. 방향, 제약, 목표를 정리하고 계층 구조(Foundation → 연간 → 월간 → 주간)로 정렬합니다.
+**"나"라는 시스템을 만들어가는 대화형 코칭입니다.**
 
-## 경로 설정 (최초 1회)
+의지력만으로는 목표에 도달할 수 없어요. 도달하려면 **시스템**이 필요합니다. align은 사용자가 목표를 향해 나아갈 수 있는 시스템을 함께 설계하고, 데이터에 기반해 계속 다듬어가는 역할을 합니다.
 
-시작 시 `echo $TIMEBOX_HOME`으로 환경변수 확인.
+Claude는 이 과정에서:
+- **목표를 깎아주는 코치**: 두리뭉술한 꿈을 검증 가능한 Outcome으로 쪼갠다
+- **시스템 설계자**: 목표 계층(Foundation → 연간 → 월간 → 주간)을 세워서 매일의 행동이 올해의 방향에 연결되게 한다
+- **데이터 기반 조언자**: 쌓인 기록에서 패턴을 읽고, 시스템을 조정할 근거를 제시한다
 
-**환경변수가 설정되어 있으면**: 해당 경로를 base로 사용. 디렉토리가 없으면 자동 생성.
+최초 목표 설정뿐 아니라, 매주/매월 목표를 갱신하거나, 큰 방향 전환 시 재정렬할 때도 사용합니다.
 
-**환경변수가 비어있으면 (최초 설치)**:
-1. AskUserQuestion: "타임박스 데이터를 저장할 경로를 정해주세요. (기본값: ~/timebox)"
-2. 사용자가 경로를 지정하면 해당 경로, Enter만 치면 `~/timebox` 사용
-3. 디렉토리 구조 생성: `mkdir -p {base}/{plans,logs,reviews,goals}`
-4. 쉘 프로필에 환경변수 추가:
-   - `~/.zshrc` (macOS/zsh) 또는 `~/.bashrc` (Linux/bash)에:
-     ```
-     export TIMEBOX_HOME="{사용자가 지정한 경로}"
-     ```
-   - 추가 전 이미 TIMEBOX_HOME이 있는지 grep으로 확인. 있으면 스킵.
-5. "TIMEBOX_HOME={경로}로 설정했습니다. 새 터미널부터 자동 적용됩니다." 안내
-6. 현재 세션에서도 사용하기 위해 `export TIMEBOX_HOME="{경로}"` 실행
+## 경로 설정
 
 ```
-Base Path: $TIMEBOX_HOME
+Base Path: $TIMEBOX_HOME (환경변수 미설정 시 ~/timebox)
 Goals: {base}/goals/
+Config: {base}/_config.md
 ```
+
+- 시작 시 `echo $TIMEBOX_HOME`으로 확인. 없으면 `~/timebox` 사용.
+- `_config.md`가 없으면: "`/timebox-setup`으로 시스템 설정을 먼저 해주세요." 안내 후 종료
 
 ## 모드 판별
 
@@ -53,7 +49,7 @@ Goals: {base}/goals/
 **절대 질문부터 시작하지 않는다.** 사용자가 먼저 쏟아내게 한다.
 
 ```
-"타임박스 시스템 초기화를 시작합니다.
+"목표 정렬을 시작합니다.
 
 올해나 요즘 중요하다고 느끼는 것들을 정리되지 않은 상태 그대로 편하게 쏟아내 주세요.
 일, 공부, 건강, 관계, 취미... 뭐든 괜찮습니다.
@@ -99,7 +95,6 @@ Goals: {base}/goals/
 - 우선순위 정렬: "이 중 올해 안에 꼭 해야 하는 건?"
 - 구체화: "포트폴리오는 어떤 형태를 생각하고 있나요?"
 - 안 할 것: "올해 의도적으로 안 하기로 한 것은?"
-- 체크인 주기: "작업 중 몇 분마다 상태 알림을 받고 싶으세요? (기본 5분)"
 
 ### Step 3: Foundation 정리
 
@@ -125,9 +120,6 @@ Goals: {base}/goals/
 
 ## 안 할 것 (올해 의도적으로 안 하는 것)
 - {항목}
-
-## 체크인 주기
-- 기본: {n}분
 
 맞나요? 수정할 부분이 있으면 말씀해주세요."
 ```
@@ -199,11 +191,6 @@ W3: {목표} (Parent: 유지)
 
 ## 안 할 것
 - {항목}
-
-## 운영
-- 체크인 주기: {n}분
-- 주간 리뷰: 월요일 아침
-- 월간 리뷰: 매월 1일
 ```
 
 **2. `{base}/goals/{YYYY}.md`**
@@ -263,8 +250,8 @@ Parent: 유지
 ### Step 6: 완료 안내
 
 ```
-"운영 체계 세팅이 완료되었습니다. 4개 파일을 생성했습니다:
-- goals/_foundation.md (방향, 제약, 체크인 주기)
+"목표 정렬이 완료되었습니다. 4개 파일을 생성했습니다:
+- goals/_foundation.md (방향, 제약)
 - goals/{YYYY}.md (연간 목표)
 - goals/{YYYY-MM}.md (월간 목표)
 - goals/{YYYY}-W{WW}.md (주간 목표)
@@ -341,11 +328,11 @@ Foundation부터 재검토. Cold Start와 동일하지만:
 4. **Parent-Child 정렬 강제**: 모든 하위 목표는 상위 목표에 연결
 5. **제약 드러내기**: 용량 초과 시 즉시 경고
 6. **성장/유지/회복 분리**: 세 축의 균형 확인
-7. **체크인 주기 설정**: _foundation.md에 기본 주기 저장 (기본값: 5분)
 
 ## 참고
 
 - Foundation: `{base}/goals/_foundation.md`
+- Config: `{base}/_config.md` (체크인 주기 등 운영 설정은 여기)
 - 연간: `{base}/goals/{YYYY}.md`
 - 월간: `{base}/goals/{YYYY-MM}.md`
 - 주간: `{base}/goals/{YYYY}-W{WW}.md`

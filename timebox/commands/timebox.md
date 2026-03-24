@@ -33,7 +33,8 @@ Reviews: {base}/reviews/
 
 1. 오늘 날짜와 요일 확인
 2. `{base}/goals/` 에서 목표 파일 확인:
-   - `_foundation.md` Read (있으면) — 방향, 제약, 체크인 주기 로드
+   - `_foundation.md` Read (있으면) — 방향, 제약, 자기 지식 로드
+   - `_config.md` Read (있으면) — 체크인 주기, 블록 길이 등 운영 설정 로드
    - `{올해}.md` (연간 목표) Read (있으면)
    - `{올해-이번달}.md` (월간 목표) Read (있으면)
    - `{올해}-W{이번주}.md` (주간 목표) Read (있으면)
@@ -44,7 +45,7 @@ Reviews: {base}/reviews/
 5. Google Calendar MCP 사용 가능하면 오늘 일정 조회하여 고정 블록으로 예약
 
 **goals 파일이 없으면:**
-- "목표 파일이 아직 없습니다. `/timebox-init`으로 목표를 먼저 설정하시겠습니까?"
+- "목표 파일이 아직 없습니다. `/timebox-setup`으로 시스템 설정 후 `/timebox-align`으로 목표를 설정하시겠습니까?"
 - 사용자가 스킵하면 goals 없이 진행 (graceful skip)
 
 ### 2단계: 마스터 파일 확인
@@ -71,7 +72,7 @@ Reviews: {base}/reviews/
 
 **목표가 없는 경우 (graceful skip):**
 - 목표 파일 없이도 Big 3 설정 가능
-- "목표 파일이 없어 프리스타일로 진행합니다. 나중에 `/timebox-init`으로 목표를 세우면 더 강력해집니다."
+- "목표 파일이 없어 프리스타일로 진행합니다. 나중에 `/timebox-align`으로 목표를 세우면 더 강력해집니다."
 
 Claude가 먼저 정리해서 보여줌:
 ```
@@ -262,11 +263,11 @@ Write 도구로 파일을 생성합니다.
 
 1. 생성된 파일 경로와 Big 3 요약을 안내합니다
 2. 현재 시각 기준 "지금은 [{블록명}] 시간입니다. {Focus} 시작하세요!" 안내
-3. "`/timebox-next`로 다음 블록을 확인하세요." 안내
-4. **체크인 주기 질문**: "오늘 체크인 주기는 몇 분으로 할까요? (기본: {_foundation.md 값 또는 5}분)"
+3. "`/timebox-now`로 다음 블록을 확인하세요." 안내
+4. **체크인 주기 질문**: "오늘 체크인 주기는 몇 분으로 할까요? (기본: {_config.md의 checkin_interval 또는 5}분)"
    - AskUserQuestion으로 응답 대기
    - 응답에 따라 CronCreate로 체크인 루프 생성:
-     - Cron: `*/{n} * * * *`, prompt: `/timebox-check`, recurring: true
+     - Cron: `*/{n} * * * *`, prompt: `/timebox-loop`, recurring: true
    - 생성된 Job ID를 사용자에게 안내 (취소 시 CronDelete 사용)
    - 실행 중 주기 변경 요청 시 기존 cron 삭제 → 새 주기로 재생성
    - 이 루프는 `/timebox-end` 실행 시 자동 해제됨

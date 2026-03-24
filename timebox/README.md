@@ -8,6 +8,22 @@ Timebox는 이걸 도와주는 시스템이에요. **"뭘 하지?"가 아니라 
 
 ---
 
+## 철학: 시스템이 나를 만든다
+
+의지력은 유한해요. "내일부터 열심히 해야지"는 3일이면 무너지죠.
+
+Timebox는 **의지력 대신 시스템**으로 움직여요. 핵심 아이디어는 세 가지:
+
+**1. 목표는 계층이다** — 올해의 방향(Foundation)에서 월간, 주간, 오늘의 Big 3까지 하나의 선으로 연결돼요. 오늘 하루가 올해의 방향에 기여하고 있는지, 항상 확인할 수 있어요. `/timebox-align`이 이 계층을 세우고 다듬어요.
+
+**2. 하루는 블록이다** — "오늘 뭐 하지?"가 아니라 "9시에 이것, 11시에 저것, 끝나면 확인"이에요. 결정 피로를 줄이고, 시간에 결과를 매핑해요. `/timebox`가 매일 아침 이걸 설계하고, `loop`·`now`·`log`가 하루를 함께 걸어가요.
+
+**3. 기록이 나를 가르친다** — 매일 쌓이는 데이터에서 패턴이 보여요. "오전에 집중 잘 됨", "문서 작업은 2배 걸림" 같은 사실들. 이 자기 지식이 Foundation에 축적되고, 다음 날의 블록 배치를 더 정확하게 만들어요. `/timebox-review`가 패턴을 발견하고, `/timebox-align`이 목표를 조정해요.
+
+결국 Timebox는 **"나"라는 시스템을 만들어가는 도구**예요. Claude가 코치로서 목표를 깎아주고, 데이터를 분석해주고, 패턴을 짚어주지만 — 결정은 항상 당신이 해요. 시스템은 당신을 대신하지 않아요. 당신이 더 잘 결정할 수 있게 도와줄 뿐이에요.
+
+---
+
 ## 왜 Big 3인가?
 
 할 일이 10개 있어도, 오늘 진짜 중요한 건 3개 이하일 거예요. 나머지는 "하면 좋은 것"이죠.
@@ -37,28 +53,46 @@ Timebox는 이걸 도와주는 시스템이에요. **"뭘 하지?"가 아니라 
 
 ```mermaid
 graph TD
-    F["<b>Foundation</b><br/>나는 누구이고, 어디로 가는가"] --> G["연간 → 월간 → 주간 목표"]
-    G --> TB["/timebox<br/>매일 아침"]
-    TB -->|"Big 3 + 시간 블록 생성<br/>Foundation 자기 지식 → 블록 배치 참고"| DAY
-
-    subgraph DAY [하루]
-        CHECK["/timebox-check · 자동 체크인"]
-        NEXT["/timebox-next · 블록 전환"]
-        LOG["/timebox-log · 작업 기록"]
+    subgraph INIT ["처음 — 시스템 구축"]
+        SETUP["/timebox-setup<br/>시스템 설정"] -->|"경로, 연동, 운영 옵션"| CONFIG["_config.md"]
+        SETUP -->|"설정 완료 후"| ALIGN_INIT["/timebox-align<br/>목표 정렬 코칭"]
+        ALIGN_INIT -->|"브레인덤프 → 인터뷰<br/>→ Foundation + 목표 계층"| F
     end
 
-    DAY --> END["/timebox-end<br/>하루 마감"]
-    END -->|"Big 3 리뷰 + Reflection + Growth Notes"| REV["/timebox-review<br/>주간 · 월간 리뷰"]
-    REV -->|"패턴 발견<br/>→ 다음 주 목표 생성<br/>→ Foundation 자기 지식 업데이트<br/>→ 실험 1개 설정"| F
+    subgraph DAILY ["매일 — 하루의 사이클"]
+        TB["/timebox<br/>아침 설계"]
+        TB -->|"Big 3 + 시간 블록 생성"| LOOP["/timebox-loop · 자동 체크"]
+        TB --> NOW["/timebox-now · 지금 뭐하지?"]
+        TB --> LOG["/timebox-log · 작업 기록"]
+        LOOP --> END["/timebox-end<br/>하루 마감"]
+        NOW --> END
+        LOG --> END
+    end
 
+    subgraph GROWTH ["성장 — 리뷰의 사이클"]
+        END -->|"Big 3 리뷰 + Reflection<br/>+ Coach's Notes"| REV["/timebox-review<br/>주간 · 월간 · 연간"]
+        REV -->|"패턴 발견 → 목표 조정"| ALIGN["/timebox-align<br/>목표 갱신"]
+        ALIGN -->|"Foundation + 목표 계층<br/>갱신/재설정"| F["<b>Foundation</b><br/>나는 누구이고, 어디로 가는가"]
+        F --> G["연간 → 월간 → 주간 목표"]
+    end
+
+    G -->|"자기 지식 → 블록 배치"| TB
+    CONFIG -.->|"운영 설정 참조"| TB
+
+    style INIT fill:#f5f0ff,stroke:#ccc
+    style DAILY fill:#fffff0,stroke:#ccc
+    style GROWTH fill:#f0f8ff,stroke:#ccc
     style F fill:#4a90d9,color:#fff
     style REV fill:#d9534f,color:#fff
     style TB fill:#5cb85c,color:#fff
     style END fill:#f0ad4e,color:#fff
+    style ALIGN fill:#9b59b6,color:#fff
+    style ALIGN_INIT fill:#9b59b6,color:#fff
+    style SETUP fill:#95a5a6,color:#fff
 ```
-> **닫힌 루프** — 리뷰가 다음 날을 바꾼다
+> **세 개의 층** — setup으로 시스템을 세우고, 매일의 사이클이 데이터를 만들고, 리뷰의 사이클이 나를 바꾼다
 
-리뷰를 할수록 Foundation의 "자기 지식"이 두꺼워지고, 매일 `/timebox`가 그걸 읽어서 블록을 배치해요. **시스템을 쓸수록 시스템이 나에게 맞아가요.**
+처음에 `/timebox-setup`으로 시스템 환경을 세우고, `/timebox-align`으로 "나는 누구이고 어디로 가는가"를 정리한다. 그 다음부터는 `/timebox`로 아침을 설계하고, `loop`·`now`·`log`로 하루를 기록하고, `/timebox-end`로 마감한다. 이 데이터가 쌓이면 `/timebox-review`가 패턴을 발견하고, `/timebox-align`이 Foundation과 목표를 다듬는다. **매일의 사이클이 성장의 사이클을 먹여 살리고, 성장의 사이클이 내일의 아침을 더 정확하게 만든다.**
 
 ---
 
@@ -69,7 +103,8 @@ graph TD
 ### Week 0: 처음 세팅
 
 ```
-/timebox-init
+/timebox-setup    → 경로 설정 + _config.md 생성
+/timebox-align    → 목표 정렬 인터뷰 시작
 ```
 
 대화형 인터뷰가 시작된다. 먼저 쏟아내라고 한다:
@@ -99,9 +134,30 @@ Claude가 정리한다:
 2. 하루에 방해 없이 집중할 수 있는 시간은 몇 시간?
 ```
 
-3-5턴의 대화 후, 4개 파일이 생성된다:
+`/timebox-setup`으로 경로와 설정 파일이 먼저 생성되고, `/timebox-align`의 3-5턴 대화 후 목표 파일들이 생성된다:
 
-**`goals/_foundation.md`**
+**`_config.md`** (setup이 생성)
+```markdown
+# Timebox Config
+
+## 경로
+- home: ~/timebox
+
+## 연동
+- github_sync: off
+- notification_channel: claude-code
+- google_calendar: off
+
+## 운영
+- checkin_interval: 10
+- deep_work_block: 90
+- break_duration: 15
+
+## 변경 이력
+- 2026-03-24: 초기 설정 생성
+```
+
+**`goals/_foundation.md`** (align이 생성)
 ```markdown
 # Foundation
 
@@ -122,11 +178,6 @@ Claude가 정리한다:
 ## 안 할 것
 - 사이드 프로젝트 (승급 전까지 보류)
 - 새 기술 스택 도입 제안
-
-## 운영
-- 체크인 주기: 10분
-- 주간 리뷰: 금요일 오후
-- 월간 리뷰: 매월 1일
 ```
 
 **`goals/2026.md`**
@@ -292,7 +343,7 @@ Claude: "확인. Big 3:
 
 #### 하루 중간 — 블록 전환과 기록
 
-**11:00 Break — `/timebox-next`**
+**11:00 Break — `/timebox-now`**
 
 ```
 Claude: "[Deep Work 1] 종료. Big 3 #1 진행 상황:
@@ -596,7 +647,7 @@ Daily(`/timebox-end`)와 Weekly/Monthly(`/timebox-review`)는 **깊이가 다릅
 
 Foundation은 두 층으로 되어 있어요:
 
-**상단 — 정적 층** (큰 축이 바뀔 때만 `/timebox-init Realign`으로 교체)
+**상단 — 정적 층** (큰 축이 바뀔 때만 `/timebox-align`으로 재정렬)
 | 섹션 | 역할 |
 |------|------|
 | 방향 | 북극성. 모든 목표의 최상위 근거 |
@@ -604,7 +655,8 @@ Foundation은 두 층으로 되어 있어요:
 | 제약 | 시간/마감 등 변경 불가 조건 |
 | 유지선 | 떨어뜨리면 안 되는 것 |
 | 안 할 것 | 의도적으로 안 하기로 한 것 |
-| 운영 | 체크인 주기, 리뷰 주기 |
+
+> 체크인 주기, 블록 길이 등 **운영 설정**은 `_config.md`에서 관리합니다.
 
 **하단 — 성장 층** (리뷰할 때마다 자라남)
 | 섹션 | 역할 |
@@ -622,34 +674,55 @@ Foundation은 두 층으로 되어 있어요:
 
 ## 커맨드 레퍼런스
 
+### 설정
+
 | 커맨드 | 언제 | 하는 일 |
 |--------|------|---------|
-| `/timebox-init` | 처음 1회, 또는 큰 축 변경 시 | 목표 계층 세팅 (Foundation → 연간 → 월간 → 주간) |
-| `/timebox` | 매일 아침 | Big 3 코칭 + 시간 블록 생성 + 체크인 루프 시작 |
-| `/timebox-check` | 자동 (cron) | 현재 블록 상태 알림 |
-| `/timebox-next` | 블록 전환 시 | 체크인 + 다음 블록 안내 + 에너지 기록 |
+| `/timebox-setup` | 최초 1회, 설정 변경 시 | 시스템 환경 설정 (경로, 연동, 운영 옵션) |
+
+### 매일 — 하루의 사이클
+
+| 커맨드 | 언제 | 하는 일 |
+|--------|------|---------|
+| `/timebox` | 매일 아침 | Big 3 코칭 + 시간 블록 생성 |
+| `/timebox-loop` | 자동 (cron/loop) | 현재 시간에 맞는 블록 상태 알림 |
+| `/timebox-now` | "나 지금 뭐하지?" 할 때 | 현재 블록 확인 + 다음 할 일 안내 + 에너지 기록 |
 | `/timebox-log` | 작업 구간 끝 | 세션 기록 + Big 3 진행률 갱신 |
-| `/timebox-end` | 하루 마감 | Big 3 리뷰 + Reflection + 내일 후보 |
-| `/timebox-review` | 주간/월간/연간 | 패턴 분석 + 목표 업데이트 + Foundation 성장 + 실험 설계 |
+| `/timebox-end` | 하루 마감 | Big 3 리뷰 + Reflection + Coach's Notes + 내일 후보 |
+
+### 성장 — 리뷰의 사이클
+
+| 커맨드 | 언제 | 하는 일 |
+|--------|------|---------|
+| `/timebox-review` | 주간/월간/연간 | 하루 데이터 기반 패턴 분석 + Foundation 성장 + 실험 설계 |
+| `/timebox-align` | 최초 + 주간/월간 + 방향 전환 시 | 목표 정렬 코칭 (Foundation ↔ 목표 계층) |
 
 ## 하루의 흐름
 
 ```
-/timebox-init     (한 번, 또는 큰 전환점에서)
-  └→ /timebox     (매일 아침)
-       ├→ /timebox-check  (자동, 설정한 주기마다)
-       ├→ /timebox-next   (블록 전환할 때)
-       ├→ /timebox-log    (작업 기록할 때)
-       └→ /timebox-end    (하루 마감)
-            └→ /timebox-review  (금요일 또는 기간 끝)
+/timebox-setup         (최초 1회: 경로 + _config.md 설정)
+/timebox-align         (최초 + 주기적: Foundation + 목표 계층 정렬)
+
+── 매일 ──────────────────────────────────────
+/timebox              (아침: Big 3 + 블록 설계)
+  ├→ /timebox-loop    (자동: 현재 블록 체크)
+  ├→ /timebox-now    (수동: 지금 뭐하지?)
+  ├→ /timebox-log     (수동: 작업 기록)
+  └→ /timebox-end     (마감: 리뷰 + 회고)
+
+── 성장 ──────────────────────────────────────
+/timebox-review       (주간/월간: 패턴 분석 + 실험 설계)
+  └→ /timebox-align   (목표 갱신 → Foundation 업데이트)
+       └→ Foundation   (자기 지식이 다음 /timebox를 더 정확하게)
 ```
 
 ## 데이터 구조
 
 ```
 $TIMEBOX_HOME/
+├── _config.md               # 시스템 설정 (/timebox-setup이 관리)
 ├── goals/
-│   ├── _foundation.md       # 방향 + 자기 지식 (시스템의 핵심)
+│   ├── _foundation.md       # 방향 + 자기 지식 (/timebox-align이 관리)
 │   ├── {YYYY}.md             # 연간 목표
 │   ├── {YYYY-MM}.md          # 월간 목표
 │   └── {YYYY}-W{WW}.md      # 주간 목표 + 실험
@@ -677,9 +750,12 @@ export TIMEBOX_HOME=~/my-timebox   # 기본값: ~/timebox
 
 ## 설정
 
-| 설정 | 기본값 | 설명 |
+| 설정 | 기본값 | 관리 |
 |------|--------|------|
-| `$TIMEBOX_HOME` | `~/timebox` | 데이터 저장 경로 |
-| 체크인 주기 | `_foundation.md`에서 설정 | `/timebox`에서 매일 조정 가능 |
-| Deep Work 블록 | 90분 | 사용자 패턴에 따라 조정 |
-| Break | 15분 | 종료 의식 포함 |
+| `$TIMEBOX_HOME` | `~/timebox` | 환경변수 (`/timebox-setup`이 설정) |
+| 체크인 주기 | 5분 | `_config.md` (`/timebox-setup`으로 변경) |
+| Deep Work 블록 | 90분 | `_config.md` |
+| Break | 15분 | `_config.md` |
+| GitHub 연동 | off | `_config.md` (미래 기능) |
+| 알림 채널 | claude-code | `_config.md` (미래 기능) |
+| Google Calendar | off | `_config.md` (미래 기능) |

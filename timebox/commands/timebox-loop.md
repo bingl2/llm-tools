@@ -1,12 +1,12 @@
 ---
-name: timebox-check
-description: "타임박스 자동 체크 - /loop 연동용 무응답 알림"
+name: timebox-loop
+description: "타임박스 자동 루프 - /loop 연동용 무응답 알림"
 category: productivity
 ---
 
-# /timebox-check - 자동 블록 알림 (loop 연동)
+# /timebox-loop - 자동 블록 알림 (loop 연동)
 
-`/loop 5m /timebox-check` 로 사용. 질문 없이 현재 상태만 알려주고 끝.
+`/loop 5m /timebox-loop` 로 사용. 질문 없이 현재 상태만 알려주고 끝.
 사용자 응답을 기다리지 않는다 (AskUserQuestion 사용 금지).
 
 ## 경로 설정
@@ -122,6 +122,6 @@ Plans: {base}/plans/
 
 ## 참고
 
-- 체크인 주기는 `/timebox`에서 설정 (기본값: _foundation.md의 체크인 주기)
+- 체크인 주기는 `/timebox`에서 설정 (기본값: _config.md의 checkin_interval)
 - 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md`
 - 마스터 파일 수정하지 않음 (읽기 전용)
