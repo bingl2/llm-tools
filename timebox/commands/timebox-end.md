@@ -31,10 +31,13 @@ category: productivity
 3. 목표 파일 확인:
    - `{base}/goals/{올해}-W{이번주}.md` (주간 목표) Read (있으면)
    - `{base}/goals/{올해-이번달}.md` (월간 목표) Read (있으면)
-4. `{base}/_config.md` Read (있으면) — `github_sync` 설정 확인용
-5. 각 Big 3의 실제 소요 블록 계산:
-   - 로그 파일의 `related_to` 필드에서 Big 3 항목별 매칭 블록 집계
-   - 블록 수 = 해당 Big 3에 투입된 블록 개수 (부분 투입도 1블록으로 카운트)
+4. `{base}/_config.md` Read (있으면) — `github_sync` 설정 및 `deep_work_block` 확인용
+5. 최근 2-3일 daily review 파일 Read (있으면):
+   - Glob 패턴: `{base}/reviews/*-timebox-review.md` 에서 최근 2-3개
+   - carry-over 기간 판단용 (같은 Big 3가 며칠째 미완료인지 추적)
+6. 각 Big 3의 실제 소요 블록 계산:
+   - 로그 파일의 `related_to` 필드에서 Big 3 항목별 매칭 블록 집계 (`Big 1`, `Big 2`, `Big 3`으로 매칭)
+   - 블록 수 = 해당 Big 3에 투입된 블록 개수 (1블록 = `_config.md`의 `deep_work_block` 설정. 블록의 절반 이상 투입 시 1블록, 미만이면 0.5블록)
    - 마스터 파일의 Big 3 예상 블록 `(~n블록)`과 비교용
 
 ### 2단계: Big 3 냉정한 리뷰

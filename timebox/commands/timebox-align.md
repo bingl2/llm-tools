@@ -31,8 +31,8 @@ Claude는 이 과정에서:
 
 **모드 자동 판별:**
 - **Cold Start**: {올해}-foundation.md 없음 → 처음부터 전부 세팅
-- **Refresh**: {올해}-foundation.md 있음 + 주간 목표가 지난 주 이전 → 주간/월간 업데이트
-- **Realign**: 사용자가 "방향을 바꾸고 싶다", "목표를 재설정" 등 → Foundation부터 재검토
+- **Refresh**: {올해}-foundation.md 있음 + 주간 목표가 지난 주 이전 + `/timebox-review`를 실행하지 않은 경우 → 주간/월간 업데이트 (review의 fallback)
+- **Realign**: 사용자가 방향 전환을 요청 (이직, 큰 목표 변경, 새로운 도전 시작 등) → Foundation부터 재검토. 사용자에게 "왜 align을 하려는지" 입력을 받아 맥락을 파악한 후 진행
 
 ## Cold Start 모드
 
@@ -268,9 +268,11 @@ Parent: 유지
 이 주간/월간 목표를 바탕으로 오늘의 일정을 제안해 드리겠습니다."
 ```
 
-## Refresh 모드 (매주 월요일 등)
+## Refresh 모드 (fallback)
 
-> `/timebox-review`에서 이미 다음 기간 목표를 설정했으면 확인만 하고 넘어갑니다. review를 실행하지 않았을 때의 fallback 경로입니다.
+> **Refresh는 `/timebox-review`를 실행하지 않았을 때의 fallback입니다.** 정기적 목표 갱신(주간/월간 전환)은 `/timebox-review`에서 처리합니다. align은 **방향 전환**(이직, 큰 목표 변경, 새로운 도전 시작 등)이나 **최초 설정**(Cold Start)에 사용합니다.
+>
+> review에서 이미 다음 기간 목표를 설정했으면 확인만 하고 넘어갑니다.
 
 ### 1단계: 지난주 리뷰 수집
 

@@ -16,7 +16,7 @@ category: productivity
 - **Task 중심이 아닌 Time 중심**: "무엇을 하나"가 아니라 "언제 무엇을 하나"
 - **Big 3**: 하루에 핵심 3가지만 정하고 나머지는 유연하게
 - **에너지 관리**: 고에너지 시간에 Deep Work, 저에너지 시간에 Shallow Work
-- **15분 체크인**: 블록 전환 시 짧은 리플렉션으로 하루를 조정
+- **정기 체크인**: 블록 전환 시 짧은 리플렉션으로 하루를 조정 (주기는 `_config.md`의 `checkin_interval`)
 
 ## 실행 흐름
 
@@ -257,15 +257,15 @@ Write 도구로 파일을 생성합니다.
 4. **체크인 루프 설정**:
    - CronList로 기존 `/timebox-loop` cron 확인
    - 이미 있으면: "체크인이 {n}분 주기로 돌고 있습니다. 변경하시겠습니까?" (변경 시 기존 삭제 → 재생성)
-   - 없으면: "체크인 주기는 몇 분으로 할까요? (`_config.md` 없으면 기본값 5분 사용) (기본: {_config.md의 checkin_interval 또는 5}분)"
-   - AskUserQuestion으로 응답 → CronCreate: `*/{n} * * * *`, prompt: `/timebox-loop`, recurring: true
-   - 생성된 Job ID 안내 (취소 시 CronDelete)
-   - 이 루프는 `/timebox-end` 실행 시 자동 해제됨
+   - 없으면: "체크인 루프를 시작할까요? (기본: {_config.md의 checkin_interval 또는 15}분)"
+   - AskUserQuestion으로 응답 → `/loop {n}m /timebox-loop` 실행 안내
+   - 이 루프는 `/timebox-end` 실행 시 해제됨
 
 ## 참고사항
 
 - 마스터 파일 경로: `{base}/plans/{YYYY-MM-DD}.md`
 - 목표 파일 경로: `{base}/goals/`
-- 블록 기본 길이: Deep Work 90분, Shallow 60분, Break 15분
+- 블록 기본 길이: Deep Work 90분, Shallow 60분, Break 15분 (`_config.md`에서 변경 가능)
+- **1블록 = `_config.md`의 `deep_work_block` 설정 시간** (기본 90분). 블록 길이가 날마다 달라도 Estimation Accuracy의 배율(예상 대비 실제)은 비교 가능
 - 사용자 근무시간에 맞게 블록을 조정 가능
 - Big 3는 최대 3개. "적게, 깊게"가 원칙

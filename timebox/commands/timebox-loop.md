@@ -6,8 +6,8 @@ category: productivity
 
 # /timebox-loop - 자동 블록 알림 (loop 연동)
 
-`/loop 5m /timebox-loop` 로 사용. 질문 없이 현재 상태만 알려주고 끝.
-사용자 응답을 기다리지 않는다 (AskUserQuestion 사용 금지).
+`/loop {체크인주기}m /timebox-loop` 으로 사용 (주기는 `_config.md`의 `checkin_interval`, 기본 15분).
+질문 없이 현재 상태만 알려주고 끝. 사용자 응답을 기다리지 않는다 (AskUserQuestion 사용 금지).
 
 ## 경로
 `$TIMEBOX_HOME` (미설정 시 `~/timebox`). 마스터 파일: `{base}/plans/{YYYY-MM-DD}.md` (읽기 전용).

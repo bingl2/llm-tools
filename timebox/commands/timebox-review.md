@@ -31,7 +31,7 @@ category: productivity
 **기간 결정:**
 - weekly: 이번 주 월~오늘 (또는 지난 주 전체)
 - monthly: 이번 달 1일~오늘 (또는 지난 달 전체)
-- yearly: 올해 1월~오늘
+- yearly: 올해 1월~오늘 (월간 리뷰 파일을 1차 소스로 사용. 월간 리뷰가 없는 달만 daily review로 보충)
 
 **읽을 파일:**
 1. 해당 기간의 daily review 파일들:
@@ -91,7 +91,7 @@ category: productivity
 **과계획/저계획 패턴:**
 - Big 3가 실제로 3개 다 끝난 날 비율: {n}%
 - 평균 완료 수: {n}개/일
-- 블록 추정 정확도: daily review의 Estimation Accuracy에서 집계 → 평균 배율 산출 (실제 블록 수는 로그 파일의 `related_to`가 각 Big 3 항목과 매칭되는 건수로 산출)
+- 블록 추정 정확도: daily review의 `## Estimation Accuracy` 테이블에서 배율을 읽어 기간 평균을 산출
   - "추정 대비 평균 {n}배 소요. {작업 유형}이 특히 부정확" 식의 구체적 피드백
 - "Big 3를 2개로 줄이고 보너스 1개를 두는 게 현실적입니다" 식의 제안
 
@@ -230,7 +230,7 @@ M2: {목표} (Parent: {Y?}) — {근거}
 - yearly: `{base}/goals/{다음해}.md` Write + Foundation 리프레시 제안
 - 주간 목표 파일에는 `## 지난주 리뷰` 섹션에 핵심 인사이트 1-2줄 포함
 
-> **Note:** 이 목표 설정은 `/timebox-align` Refresh를 대체합니다. review에서 목표를 세웠으면 align Refresh는 확인만 합니다.
+> **Note:** review의 목표 설정은 데이터 기반 자연 갱신입니다 (주간/월간 전환기의 정기 회고). `/timebox-align`은 방향 전환(이직, 큰 목표 변경 등) 시 사용자가 직접 실행하여 입력 기반으로 재정렬합니다. review에서 이미 목표를 세웠으면 align Refresh는 확인만 합니다.
 
 ### 8단계: Foundation 자기 지식 업데이트
 

@@ -34,10 +34,19 @@ category: productivity
 5. "TIMEBOX_HOME={경로}로 설정했습니다. 새 터미널부터 자동 적용됩니다." 안내
 6. 현재 Claude Code 세션에서도 사용하기 위해 `export TIMEBOX_HOME="{경로}"` 실행
 
-### 3단계: 설정 파일 생성
+### 3단계: 운영 설정 입력 + 설정 파일 생성
 
 **최초 설치 시:**
-기본값으로 `{base}/_config.md` 생성:
+
+AskUserQuestion으로 핵심 운영 설정을 확인합니다:
+
+1. "Deep Work 블록 길이를 정해주세요. (기본값: 90분)"
+   - 60분, 90분, 120분 등 사용자 선호에 따라 설정
+   - 이 값이 "1블록"의 기준이 됩니다 (Estimation Accuracy 등에서 사용)
+2. "체크인 루프 주기를 정해주세요. (기본값: 15분)"
+   - `/loop {n}m /timebox-loop`으로 자동 알림이 이 주기로 실행됩니다
+
+사용자가 Enter만 치면 기본값 사용. 입력값으로 `{base}/_config.md` 생성:
 
 ```markdown
 # Timebox Config
@@ -47,13 +56,13 @@ category: productivity
 
 ## 연동
 - github_sync: off
-- notification_channel: claude-code  <!-- claude-code | telegram -->
+- notification_channel: claude-code  (claude-code | telegram)
 - google_calendar: off
 
 ## 운영
-- checkin_interval: 5  <!-- 분 -->
-- deep_work_block: 90  <!-- 분 -->
-- break_duration: 15  <!-- 분 -->
+- checkin_interval: 15  (분 — 체크인 루프 주기)
+- deep_work_block: 90  (분 — 1블록의 기준 시간)
+- break_duration: 15  (분)
 
 ## 변경 이력
 - {오늘 날짜}: 초기 설정 생성
@@ -65,6 +74,7 @@ category: productivity
 ```
 "설정이 완료되었습니다:
 - 데이터 경로: {경로}
+- Deep Work 블록: {n}분 (= 1블록)
 - 체크인 주기: {n}분
 - 연동: GitHub(off), Telegram(off), Google Calendar(off)
 

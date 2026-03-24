@@ -114,13 +114,13 @@ graph TD
 
 ### `/timebox-align` — 목표 정렬 코칭
 
-"나"라는 시스템을 설계하는 대화형 코칭.
+"나"라는 시스템을 설계하는 대화형 코칭. **방향 전환**(이직, 큰 목표 변경 등)이나 **최초 설정** 시 사용. 정기적 목표 갱신은 `/timebox-review`에서 처리.
 
 | 모드 | 트리거 | 동작 |
 |------|--------|------|
 | **Cold Start** | Foundation 없음 | 브레인덤프 → 인터뷰 → Foundation + 연간/월간/주간 목표 생성 |
-| **Refresh** | 주간 목표가 지난 주 이전 | 지난주 리뷰 기반 이번 주 목표 설정 (review의 fallback) |
-| **Realign** | 사용자가 방향 전환 요청 | Foundation부터 재검토, 변경 부분만 Edit |
+| **Refresh** | 주간 목표가 지난 주 이전 + review 미실행 | 지난주 리뷰 기반 이번 주 목표 설정 (review의 fallback) |
+| **Realign** | 사용자가 방향 전환 요청 | "왜 align을 하려는지" 입력 → Foundation부터 재검토, 변경 부분만 Edit |
 
 - Foundation에서 연간 → 월간 → 주간까지 Parent-Child 정렬 강제
 - 용량 초과 시 즉시 경고 ("목표가 가용 블록을 초과합니다")
@@ -138,13 +138,13 @@ graph TD
 3. "이 시간에 할 수 있는 가장 임팩트 있는 일이 정말 이건가요?"
 4. 3일+ carry-over → 회피 탐지
 
-**추정 정확도 보정** — Foundation에 데이터가 있으면 과거 정확도를 대조하여 블록 수 조정 제안.
+**추정 정확도 보정** — Foundation에 데이터가 있으면 과거 정확도를 대조하여 블록 수 조정 제안. 1블록 = `_config.md`의 `deep_work_block` 설정 시간(기본 90분).
 
 **출력:** `plans/{YYYY-MM-DD}.md` (Big 3 + Schedule + Energy Log)
 
 ### `/timebox-loop` — 자동 블록 알림
 
-`/loop 5m /timebox-loop`으로 사용. **질문 없이 출력만.**
+`/loop {체크인주기}m /timebox-loop`으로 사용 (주기는 `_config.md`의 `checkin_interval`, 기본 15분). **질문 없이 출력만.**
 
 - 현재 블록 + 다음 할 일을 Content-first로 표시
 - 블록 종료 5분 전 / 블록 전환 / 시간 초과 알림
@@ -170,7 +170,7 @@ graph TD
 
 - 이벤트 분류: `deep-work` / `interrupt` / `switch` / `ad-hoc` / `break` / `shallow`
 - 목표 연결 (`related_to`): Big 3 항목 또는 주간/월간 목표
-- 에너지 레벨 기록 (로그 + 마스터 파일 Energy Log 테이블)
+- 에너지 레벨 기록 (1-5, 스킵 가능. 에너지 = "지금 집중할 수 있는 상태". 로그 + 마스터 파일 Energy Log 테이블)
 - 코치 피드백: 이벤트 타입 + 에너지 + 하루 맥락을 종합한 개인화 메시지
 
 **출력:** `logs/{YYYY-MM-DD}/{HHmm}-timebox-{타입}.md`
@@ -181,7 +181,7 @@ graph TD
 
 **흐름:** 체크인 루프 해제 → 데이터 수집 → Big 3 리뷰 → 블록 분석 → 에너지 패턴 → 목표 정렬 → 리플렉션 → Review 파일 생성 → Git 커밋
 
-- **Estimation Accuracy**: 각 Big 3의 예상 블록 vs 실제 소요 블록 (로그의 `related_to` 매칭으로 산출)
+- **Estimation Accuracy**: 각 Big 3의 예상 블록 vs 실제 소요 블록 (로그의 `related_to`로 `Big 1`/`Big 2`/`Big 3` 매칭하여 산출. 1블록 = `deep_work_block` 설정)
 - **Carry Forward**: 미완료 Big 3 → 이월/분해/드롭 선택
 - **회고 2단 구조**: Reflection(사용자 원문 그대로) + Coach's Notes(팩트 기반 + When-Then + 질문)
 - **Git 자동 커밋**: `_config.md`의 `github_sync: on`이면 push까지
@@ -196,7 +196,7 @@ graph TD
 /timebox-review yearly       → 연간
 ```
 
-> review는 패턴을 파악해서 시스템을 만들고 피드백하기 위함. 목표가 변경될 수 있고, 이 패턴을 바탕으로 하루의 일과를 정할 때 참고.
+> review는 데이터 기반으로 패턴을 파악하고 시스템을 개선하는 정기 회고 (weekly/monthly/yearly). 다음 기간 목표도 여기서 자연 갱신. 방향 전환이 필요하면 `/timebox-align`을 별도 실행.
 
 **Phase 1 (분석 + 회고):**
 - 성과 요약 (Big 3 달성률, 블록 준수율)
@@ -297,8 +297,8 @@ git clone https://github.com/bingl2/llm-tools.git
 | 설정 | 기본값 | 관리 |
 |------|--------|------|
 | `$TIMEBOX_HOME` | `~/timebox` | 환경변수 (`/timebox-setup`) |
-| 체크인 주기 | 5분 | `_config.md` |
-| Deep Work 블록 | 90분 | `_config.md` |
+| 체크인 주기 | 15분 | `_config.md` (`/timebox-setup`에서 입력) |
+| Deep Work 블록 (= 1블록) | 90분 | `_config.md` (`/timebox-setup`에서 입력) |
 | Break | 15분 | `_config.md` |
 | GitHub 연동 | off | `_config.md` |
 | Google Calendar | off | `_config.md` |
