@@ -1,32 +1,48 @@
-# Claude Tools
+# llm-tools
 
-Productivity plugins for Claude Code.
+Claude Code용 생산성 플러그인 모음.
 
-## Available Plugins
+## [Timebox](./timebox/)
 
-### [Timebox](./timebox/)
-타임박싱 기반 하루 계획 + 목표 정렬 코칭 시스템.
+**목표 정렬 + 시간 블록 + 자기 지식의 닫힌 루프.**
 
-- 목표 계층 관리 (연간 → 월간 → 주간 → 일간)
-- Big 3 중심의 하루 설계
-- 자동 체크인 + 에너지 추적
-- 팩트 기반 리뷰 코칭
+"뭘 하지?"가 아니라 "이 시간에 이 결과를 낸다"로 하루를 설계하고, 매일 기록하고, 매주 패턴을 발견하고, 그 패턴이 다음 날의 플랜을 더 정확하게 만들어줍니다.
 
-## Installation
+### 커맨드
 
-```bash
-# 마켓플레이스에서 설치
-claude plugin marketplace add https://github.com/choihyunbin/claude-tools.git
+| 커맨드 | 역할 |
+|--------|------|
+| `/timebox-setup` | 시스템 설정 (경로, 블록 길이, 체크인 주기) |
+| `/timebox-align` | 목표 정렬 코칭 (Foundation + 연간/월간/주간 목표) |
+| `/timebox` | 아침 설계 (Big 3 + 시간 블록 배치) |
+| `/timebox-loop` | 자동 블록 알림 (질문 없이 출력만) |
+| `/timebox-now` | 지금 뭐하지? (대화형 체크인) |
+| `/timebox-log` | 작업 로그 기록 + 체크리스트 갱신 |
+| `/timebox-end` | 하루 마감 (Big 3 리뷰 + 내일 준비) |
+| `/timebox-review` | 패턴 리뷰 (주간/월간/연간 회고) |
 
-# 원하는 플러그인 설치
-claude plugin install timebox
+자세한 내용은 [Timebox README](./timebox/README.md)를 참고하세요.
+
+## 설치
+
+Claude Code에서 `/plugin` → Marketplace → **Add Market**에 아래 URL을 등록합니다:
+
+```
+https://github.com/bingl2/llm-tools.git
 ```
 
-## Configuration
+등록 후 Marketplace에서 `timebox`를 찾아 Install하면 됩니다.
 
-각 플러그인은 환경변수로 데이터 경로를 설정할 수 있습니다:
+또는 직접 클론:
 
 ```bash
-# Timebox 데이터 경로 (기본: ~/timebox)
-export TIMEBOX_HOME=~/my-timebox
+git clone https://github.com/bingl2/llm-tools.git
 ```
+
+## 설정
+
+| 환경변수 | 기본값 | 설명 |
+|----------|--------|------|
+| `$TIMEBOX_HOME` | `~/timebox` | 타임박스 데이터 저장 경로 |
+
+`/timebox-setup`을 실행하면 경로, 블록 길이, 체크인 주기 등을 설정할 수 있습니다.
