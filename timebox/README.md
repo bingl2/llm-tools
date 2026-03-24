@@ -266,11 +266,13 @@ $TIMEBOX_HOME/
 
 ## 설치
 
-Claude Code에서 `/install` 명령으로 플러그인 마켓플레이스를 열고, 아래 저장소 URL을 등록하면 가장 편합니다:
+Claude Code에서 `/plugin` → Marketplace → **Add Market**에 아래 URL을 등록합니다:
 
 ```
 https://github.com/bingl2/llm-tools.git
 ```
+
+등록 후 Marketplace에서 `timebox`를 찾아 Install하면 됩니다.
 
 또는 직접 클론:
 
