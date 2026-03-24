@@ -43,6 +43,8 @@ git clone https://github.com/bingl2/llm-tools.git
 
 클론 후 Claude Code에서 `/plugin` → **Add local** → 클론한 경로를 입력하면 로컬 플러그인으로 등록됩니다.
 
+> **참고:** CLI(Python)는 `/timebox-setup` 실행 시 자동 설치됩니다. Python 3.11+만 미리 설치되어 있으면 됩니다.
+
 ## 설정
 
 | 환경변수 | 기본값 | 설명 |
