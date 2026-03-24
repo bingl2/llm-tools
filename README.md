@@ -25,6 +25,8 @@ Claude Code용 생산성 플러그인 모음.
 
 ## 설치
 
+### Marketplace (권장)
+
 Claude Code에서 `/plugin` → Marketplace → **Add Market**에 아래 URL을 등록합니다:
 
 ```
@@ -33,11 +35,13 @@ https://github.com/bingl2/llm-tools.git
 
 등록 후 Marketplace에서 `timebox`를 찾아 Install하면 됩니다.
 
-또는 직접 클론:
+### Git Clone (직접 설치)
 
 ```bash
 git clone https://github.com/bingl2/llm-tools.git
 ```
+
+클론 후 Claude Code에서 `/plugin` → **Add local** → 클론한 경로를 입력하면 로컬 플러그인으로 등록됩니다.
 
 ## 설정
 

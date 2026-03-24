@@ -266,6 +266,8 @@ $TIMEBOX_HOME/
 
 ## 설치
 
+### 방법 1: Marketplace (권장)
+
 Claude Code에서 `/plugin` → Marketplace → **Add Market**에 아래 URL을 등록합니다:
 
 ```
@@ -274,17 +276,25 @@ https://github.com/bingl2/llm-tools.git
 
 등록 후 Marketplace에서 `timebox`를 찾아 Install하면 됩니다.
 
-또는 직접 클론:
+### 방법 2: Git Clone (직접 설치)
+
+Marketplace를 사용하지 않으려면, 직접 클론하여 로컬 플러그인으로 등록할 수 있습니다.
 
 ```bash
+# 1. 원하는 위치에 클론
 git clone https://github.com/bingl2/llm-tools.git
+
+# 2. Claude Code에서 로컬 플러그인으로 등록
+#    /plugin → Add local → 클론한 경로 입력
 ```
 
-설치 후 첫 실행:
+### 첫 실행
 
-```bash
-/timebox-setup    # 시스템 설정
-/timebox-align    # 목표 정렬
+설치 후 Claude Code에서:
+
+```
+/timebox-setup    # 시스템 설정 (경로, 블록 길이, 체크인 주기)
+/timebox-align    # 목표 정렬 (Foundation + 목표 계층)
 /timebox          # 오늘 하루 설계
 ```
 
