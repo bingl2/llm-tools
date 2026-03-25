@@ -9,7 +9,7 @@ import typer
 from timebox.paths import get_home, daily_review_path
 from timebox.parsers.review_parser import parse_daily_review
 from timebox.writers.review_writer import write_daily_review
-from timebox.output import print_json, error_json
+from timebox.output import print_json, error_json, load_stdin_json
 
 app = typer.Typer(help="리뷰")
 
@@ -23,10 +23,7 @@ def create(
     d = date.fromisoformat(date_str) if date_str else date.today()
     path = daily_review_path(home, d)
 
-    try:
-        data = json.load(sys.stdin)
-    except json.JSONDecodeError as e:
-        error_json(f"JSON 파싱 오류: {e}", code="INVALID_JSON")
+    data = load_stdin_json()
 
     path.parent.mkdir(parents=True, exist_ok=True)
     md = write_daily_review(data)

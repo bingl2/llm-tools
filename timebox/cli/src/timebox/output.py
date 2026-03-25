@@ -42,3 +42,24 @@ def error_json(message: str, code: str = "ERROR") -> None:
     """에러를 JSON으로 출력 후 exit(1)."""
     print_json({"error": message, "code": code})
     raise SystemExit(1)
+
+
+def load_stdin_json() -> Any:
+    """stdin에서 JSON을 파싱. zsh echo의 제어 문자 문제를 자동 보정."""
+    import re
+
+    raw = sys.stdin.read()
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        # zsh echo가 \n을 리터럴 개행으로 변환한 경우 보정:
+        # JSON 문자열 값 내부의 제어 문자(개행, 탭 등)를 이스케이프 처리
+        sanitized = re.sub(
+            r'"(?:[^"\\]|\\.)*"',
+            lambda m: m.group(0).replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t"),
+            raw,
+        )
+        try:
+            return json.loads(sanitized)
+        except json.JSONDecodeError as e:
+            error_json(f"JSON 파싱 오류: {e}", code="INVALID_JSON")

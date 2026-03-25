@@ -8,7 +8,7 @@ import typer
 from timebox.paths import get_home, plan_path
 from timebox.parsers.plan_parser import parse_plan
 from timebox.writers.plan_writer import write_plan
-from timebox.output import print_json, error_json
+from timebox.output import print_json, error_json, load_stdin_json
 
 app = typer.Typer(help="일간 플랜")
 
@@ -39,10 +39,7 @@ def create(
     d = date.fromisoformat(date_str) if date_str else date.today()
     path = plan_path(home, d)
 
-    try:
-        data = json.load(sys.stdin)
-    except json.JSONDecodeError as e:
-        error_json(f"JSON 파싱 오류: {e}", code="INVALID_JSON")
+    data = load_stdin_json()
 
     # Build DayPlan from JSON then write markdown
     from timebox.models import (
