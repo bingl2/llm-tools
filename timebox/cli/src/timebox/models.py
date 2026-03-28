@@ -171,6 +171,20 @@ class TimeboxConfig:
     checkin_interval: int = 15
     deep_work_block: int = 90
     break_duration: int = 15
+    obsidian_vault: bool = False
+
+
+# ──────────────────────────────────────
+# Think
+# ──────────────────────────────────────
+
+@dataclass
+class ThinkEntry:
+    timestamp: datetime
+    short_name: str
+    tags: list[str] = field(default_factory=list)
+    mood: str = ""
+    raw_content: str = ""
 
 
 # ──────────────────────────────────────

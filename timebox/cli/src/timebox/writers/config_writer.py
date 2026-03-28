@@ -14,6 +14,7 @@ def write_config(config: TimeboxConfig) -> str:
 - github_sync: {"on" if config.github_sync else "off"}
 - notification_channel: {config.notification_channel}
 - google_calendar: {"on" if config.google_calendar else "off"}
+- obsidian_vault: {"on" if config.obsidian_vault else "off"}
 
 ## 운영
 - checkin_interval: {config.checkin_interval}  (분 — 체크인 루프 주기)

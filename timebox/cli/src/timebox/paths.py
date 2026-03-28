@@ -61,9 +61,25 @@ def weekly_goals_path(home: Path, year: int, week: int) -> Path:
     return home / "goals" / f"{year}-W{week:02d}.md"
 
 
+def thinks_dir(home: Path, d: date) -> Path:
+    return home / "thinks" / d.isoformat()
+
+
+def think_path(home: Path, d: date, hhmm: str, short_name: str) -> Path:
+    return thinks_dir(home, d) / f"{d.strftime('%Y%m%d')}-{hhmm}-{short_name}.md"
+
+
+def find_thinks_for_date(home: Path, d: date) -> list[Path]:
+    """특정 날짜의 think 파일 목록 (시간순 정렬)."""
+    td = thinks_dir(home, d)
+    if not td.exists():
+        return []
+    return sorted(td.glob("*.md"))
+
+
 def ensure_dirs(home: Path) -> None:
     """timebox init: 디렉토리 구조 생성."""
-    for d in ["plans", "logs", "reviews", "goals"]:
+    for d in ["plans", "logs", "reviews", "goals", "thinks"]:
         (home / d).mkdir(parents=True, exist_ok=True)
 
 

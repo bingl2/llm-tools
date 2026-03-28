@@ -3,7 +3,7 @@ from typing import Optional
 import typer
 
 from timebox.commands import plan_cmd, now_cmd, init_cmd, log_cmd, stats_cmd, review_cmd
-from timebox.commands import goals_cmd, git_cmd
+from timebox.commands import goals_cmd, git_cmd, think_cmd
 
 app = typer.Typer(
     name="timebox",
@@ -33,4 +33,5 @@ app.add_typer(log_cmd.app, name="log")
 app.add_typer(stats_cmd.app, name="stats")
 app.add_typer(review_cmd.app, name="review")
 app.add_typer(goals_cmd.app, name="goals")
+app.add_typer(think_cmd.app, name="think")
 app.command("commit")(git_cmd.commit)

@@ -112,6 +112,33 @@ category: productivity
 - {오늘 날짜}: 초기 설정 생성
 ```
 
+### 3.5단계: Obsidian 연동 (선택)
+
+> timebox 데이터를 Obsidian에서 열람/검색/링크할 수 있도록 설정합니다.
+
+1. AskUserQuestion: "Obsidian과 연동하시겠습니까? (Y/n)"
+   - n → 스킵, `obsidian_vault: off` 유지
+2. Y인 경우:
+   - **Obsidian CLI 확인**: `which obsidian` 실행
+   - **CLI 있으면**:
+     - `obsidian_vault: on`으로 `_config.md` Edit
+     - "Obsidian CLI가 감지되었습니다. think 기록 시 데일리 노트에 자동 백링크가 추가됩니다." 안내
+   - **CLI 없으면**:
+     - `obsidian_vault: on`으로 `_config.md` Edit (URI scheme은 CLI 없이도 동작)
+     - 안내:
+       ```
+       "Obsidian CLI가 설치되어 있지 않습니다. 데일리 노트 자동 링크를 사용하려면:
+        1. Obsidian 앱을 최신 버전으로 업데이트
+        2. Settings → General → 'Command line interface' 활성화
+        3. 화면 안내대로 PATH 등록 (macOS: ~/.zprofile에 자동 추가)
+
+       CLI 없이도 노트 생성/열기는 정상 동작합니다."
+       ```
+3. **Vault 설정 안내**:
+   - "Obsidian 앱에서 'Open folder as vault' → `{TIMEBOX_HOME 경로}` 선택하세요."
+   - "기존 plans, logs, reviews, goals 파일이 모두 Obsidian에서 검색/링크 가능해집니다."
+   - (선택) `.gitignore`에 `.obsidian/` 추가 여부 질문 — github_sync가 on이면 추가 권장
+
 ### 4단계: 설정 확인
 
 생성된 설정을 보여주고:
@@ -120,7 +147,7 @@ category: productivity
 - 데이터 경로: {경로}
 - Deep Work 블록: {n}분 (= 1블록)
 - 체크인 주기: {n}분
-- 연동: GitHub(off), Telegram(off), Google Calendar(off)
+- 연동: GitHub(off), Telegram(off), Google Calendar(off), Obsidian({on|off})
 
 설정을 변경하려면 언제든 /timebox-setup을 다시 실행하세요.
 다음 단계: /timebox-align으로 목표를 설정하세요."

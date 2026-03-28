@@ -23,4 +23,5 @@ def parse_config(content: str) -> TimeboxConfig:
         checkin_interval=int(kv.get("checkin_interval", "15")),
         deep_work_block=int(kv.get("deep_work_block", "90")),
         break_duration=int(kv.get("break_duration", "15")),
+        obsidian_vault=kv.get("obsidian_vault", "off").lower() == "on",
     )
