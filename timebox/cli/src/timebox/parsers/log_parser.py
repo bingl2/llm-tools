@@ -4,6 +4,7 @@ from datetime import datetime, time
 from timebox.models import WorkLog, EventType, BlockType
 from timebox.parsers.common import split_sections, parse_time
 from timebox.parsers.plan_parser import _parse_block_type
+from timebox.tz import default_now
 
 # ── Event 메타데이터 ──
 EVENT_META_RE = re.compile(
@@ -77,7 +78,7 @@ def parse_log(content: str, filepath: str = "") -> WorkLog:
     ]
 
     # 타임스탬프: 파일명에서 추출
-    timestamp = datetime.now()
+    timestamp = default_now()
     if filepath:
         fname_match = LOG_FILENAME_RE.search(filepath)
         if fname_match:

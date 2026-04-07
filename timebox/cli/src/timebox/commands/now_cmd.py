@@ -9,6 +9,7 @@ from timebox.parsers.log_parser import parse_log
 from timebox.calculator import current_block
 from timebox.output import print_json, error_json
 from timebox.models import EventType
+from timebox.tz import default_today, default_now
 
 
 def now(
@@ -17,7 +18,7 @@ def now(
 ) -> None:
     """현재 블록 + 남은 시간 + 다음 체크리스트 항목."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     path = plan_path(home, d)
 
     if not path.exists():
@@ -30,8 +31,7 @@ def now(
         parts = time_str.split(":")
         now_time = time(int(parts[0]), int(parts[1]))
     else:
-        from datetime import datetime
-        now_time = datetime.now().time()
+        now_time = default_now().time()
 
     result = current_block(plan, now_time)
 

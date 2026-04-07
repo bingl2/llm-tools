@@ -165,6 +165,7 @@ class DailyReview:
 @dataclass
 class TimeboxConfig:
     home: str
+    timezone: str = "Asia/Seoul"
     github_sync: bool = False
     google_calendar: bool = False
     notification_channel: str = "claude-code"

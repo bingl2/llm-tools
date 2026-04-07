@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 from timebox.models import ThinkEntry
+from timebox.tz import default_now
 
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 TAG_RE = re.compile(r"tags:\s*\[([^\]]*)\]")
@@ -16,7 +17,7 @@ def parse_think(content: str, filepath: str = "") -> ThinkEntry:
     # Parse frontmatter
     tags: list[str] = []
     mood = ""
-    timestamp = datetime.now()
+    timestamp = default_now()
 
     fm = FRONTMATTER_RE.match(content)
     if fm:

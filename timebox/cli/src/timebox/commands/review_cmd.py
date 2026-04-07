@@ -10,6 +10,7 @@ from timebox.paths import get_home, daily_review_path
 from timebox.parsers.review_parser import parse_daily_review
 from timebox.writers.review_writer import write_daily_review
 from timebox.output import print_json, error_json, load_stdin_json
+from timebox.tz import default_today
 
 app = typer.Typer(help="리뷰")
 
@@ -20,7 +21,7 @@ def create(
 ) -> None:
     """stdin JSON에서 daily review 마크다운 파일 생성."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     path = daily_review_path(home, d)
 
     data = load_stdin_json()
@@ -37,7 +38,7 @@ def show(
 ) -> None:
     """daily review 조회 (JSON)."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     path = daily_review_path(home, d)
 
     if not path.exists():

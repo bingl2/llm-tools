@@ -11,6 +11,11 @@ category: productivity
 ## 경로
 `$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회/생성은 `timebox` CLI를 사용한다.
 
+## 시간대 (Timezone)
+- `_config.md`의 `timezone` 값을 읽어 모든 날짜/시각 판단의 기준으로 사용한다 (기본값: `Asia/Seoul`).
+- "오늘", "어제", "현재 시각" 등을 언급할 때 반드시 이 timezone 기준으로 답변한다.
+- CLI 명령은 이미 config timezone을 자동 적용하므로, `--date`/`--time` 없이 실행하면 timezone 기준 날짜/시각이 사용된다.
+
 ## 핵심 철학
 
 - **Task 중심이 아닌 Time 중심**: "무엇을 하나"가 아니라 "언제 무엇을 하나"

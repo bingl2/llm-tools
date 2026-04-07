@@ -82,10 +82,14 @@ category: productivity
 
 `timebox init`이 기본 `_config.md`를 생성한 뒤, AskUserQuestion으로 핵심 운영 설정을 확인합니다:
 
-1. "Deep Work 블록 길이를 정해주세요. (기본값: 90분)"
+1. "시간대(Timezone)를 설정해주세요. (기본값: Asia/Seoul)"
+   - IANA timezone 형식 사용 (예: `Asia/Seoul`, `US/Pacific`, `Europe/London`, `Asia/Tokyo`)
+   - 이 값이 모든 날짜/시각 판단의 기준이 됩니다 — "오늘", "현재 시각" 등이 이 timezone 기반으로 동작
+   - 사용자가 Enter만 치면 `Asia/Seoul` (KST) 유지
+2. "Deep Work 블록 길이를 정해주세요. (기본값: 90분)"
    - 60분, 90분, 120분 등 사용자 선호에 따라 설정
    - 이 값이 "1블록"의 기준이 됩니다 (Estimation Accuracy 등에서 사용)
-2. "체크인 루프 주기를 정해주세요. (기본값: 15분)"
+3. "체크인 루프 주기를 정해주세요. (기본값: 15분)"
    - `/loop {n}m /timebox-loop`으로 자동 알림이 이 주기로 실행됩니다
 
 사용자가 Enter만 치면 기본값(90분, 15분) 유지. 변경이 있으면 `{base}/_config.md`를 Read 후 Edit으로 해당 값만 수정.
@@ -97,6 +101,9 @@ category: productivity
 
 ## 경로
 - home: {사용자가 지정한 경로}
+
+## 시간대
+- timezone: Asia/Seoul  (IANA timezone, 예: Asia/Seoul, US/Pacific)
 
 ## 연동
 - github_sync: off
@@ -145,6 +152,7 @@ category: productivity
 ```
 "설정이 완료되었습니다:
 - 데이터 경로: {경로}
+- 시간대: {timezone} (예: Asia/Seoul)
 - Deep Work 블록: {n}분 (= 1블록)
 - 체크인 주기: {n}분
 - 연동: GitHub(off), Telegram(off), Google Calendar(off), Obsidian({on|off})
