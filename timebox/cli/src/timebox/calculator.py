@@ -240,6 +240,9 @@ def carry_over_streak(reviews: list[dict]) -> list[CarryOverItem]:
     """일별 리뷰 목록 -> carry-over 항목별 연속 일수 추적.
 
     reviews: parse_daily_review() 결과 dict 리스트 (date 오름차순 정렬 권장).
+
+    완료된 항목 제외 기준: 항목이 마지막으로 big3_candidates에 등장한 날짜(last_seen)가
+    가장 최신 리뷰 날짜 기준 7일 초과이면 완료/드롭된 것으로 간주하고 제외한다.
     """
     if not reviews:
         return []
@@ -247,8 +250,9 @@ def carry_over_streak(reviews: list[dict]) -> list[CarryOverItem]:
     # 날짜순 정렬
     sorted_reviews = sorted(reviews, key=lambda r: r["date"])
 
-    # 항목별 첫 등장일, 누적 일수, 연속 여부 추적
+    # 항목별 첫 등장일, 마지막 등장일, 누적 일수, 연속 여부 추적
     first_seen: dict[str, date] = {}
+    last_seen: dict[str, date] = {}
     scheduled_count: dict[str, int] = {}
     prev_day_items: set[str] = set()
     streak: dict[str, int] = {}
@@ -259,6 +263,7 @@ def carry_over_streak(reviews: list[dict]) -> list[CarryOverItem]:
         current_items = set(candidates)
 
         for name in current_items:
+            last_seen[name] = d
             if name not in first_seen:
                 first_seen[name] = d
                 streak[name] = 1
@@ -272,9 +277,18 @@ def carry_over_streak(reviews: list[dict]) -> list[CarryOverItem]:
 
         prev_day_items = current_items
 
+    # 가장 최신 리뷰 날짜
+    latest_review_date = date.fromisoformat(sorted_reviews[-1]["date"]) if isinstance(sorted_reviews[-1]["date"], str) else sorted_reviews[-1]["date"]
+
     # Build CarryOverItem list
+    # last_seen이 최신 리뷰 날짜 기준 7일 이내인 항목만 포함
+    # (7일 초과면 완료되었거나 드롭된 것으로 간주)
+    ACTIVE_WINDOW_DAYS = 7
     results = []
     for name, first_date in first_seen.items():
+        days_since_last = (latest_review_date - last_seen[name]).days
+        if days_since_last > ACTIVE_WINDOW_DAYS:
+            continue
         times_sched = scheduled_count.get(name, 1)
         streak_days = streak.get(name, 1)
         # times_dropped = times appeared but not consecutively (approximation)
