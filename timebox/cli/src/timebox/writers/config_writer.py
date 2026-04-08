@@ -1,6 +1,5 @@
-from datetime import date
-
 from timebox.models import TimeboxConfig
+from timebox.tz import today
 
 
 def write_config(config: TimeboxConfig) -> str:
@@ -9,6 +8,9 @@ def write_config(config: TimeboxConfig) -> str:
 
 ## 경로
 - home: {config.home}
+
+## 시간대
+- timezone: {config.timezone}  (IANA timezone, 예: Asia/Seoul, US/Pacific)
 
 ## 연동
 - github_sync: {"on" if config.github_sync else "off"}
@@ -22,5 +24,5 @@ def write_config(config: TimeboxConfig) -> str:
 - break_duration: {config.break_duration}  (분)
 
 ## 변경 이력
-- {date.today().isoformat()}: 초기 설정 생성
+- {today(config.timezone).isoformat()}: 초기 설정 생성
 """

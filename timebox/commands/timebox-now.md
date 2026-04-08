@@ -14,6 +14,10 @@ category: productivity
 ## 경로
 `$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회/수정은 `timebox` CLI를 사용한다.
 
+## 시간대 (Timezone)
+- `_config.md`의 `timezone` 값 기준으로 "현재 시각", "오늘" 등을 판단하고 응답한다 (기본값: `Asia/Seoul`).
+- CLI의 `timebox now` 명령은 config timezone을 자동 적용한다.
+
 ## 실행 흐름
 
 ### 1단계: 현재 상태 파악

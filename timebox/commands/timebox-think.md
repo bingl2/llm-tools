@@ -11,6 +11,9 @@ category: productivity
 ## 경로
 `$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회/생성은 `timebox` CLI를 사용한다.
 
+## 시간대 (Timezone)
+- `_config.md`의 `timezone` 값 기준으로 날짜/시각을 판단한다 (기본값: `Asia/Seoul`).
+
 ## 핵심 철학
 
 - **즉시성**: 생각은 휘발된다. 입력 받으면 곧바로 처리한다. 긴 질문 없이 빠르게.

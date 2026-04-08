@@ -15,6 +15,7 @@ from timebox.parsers.config_parser import parse_config
 from timebox.parsers.review_parser import parse_daily_review
 from timebox.calculator import daily_stats, weekly_stats, carry_over_streak
 from timebox.output import print_json, error_json
+from timebox.tz import default_today
 
 app = typer.Typer(help="통계")
 
@@ -25,7 +26,7 @@ def today(
 ) -> None:
     """오늘 통계 계산 (JSON)."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
 
     ppath = plan_path(home, d)
     if not ppath.exists():
@@ -67,7 +68,7 @@ def week(
 ) -> None:
     """주간 통계 (JSON)."""
     home = get_home()
-    today = date.today()
+    today = default_today()
     _year = year if year is not None else today.year
     _week = week_num if week_num is not None else int(today.strftime("%V"))
 
@@ -96,7 +97,7 @@ def month(
 ) -> None:
     """월간 통계 (JSON)."""
     home = get_home()
-    today = date.today()
+    today = default_today()
     _year = year if year is not None else today.year
     _month = month_num if month_num is not None else today.month
 
@@ -144,7 +145,7 @@ def carry_over(
 ) -> None:
     """carry-over 항목 연속 일수 통계 (JSON)."""
     home = get_home()
-    today = date.today()
+    today = default_today()
 
     review_files = find_recent_reviews(home, today, count)
     reviews = []

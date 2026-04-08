@@ -13,6 +13,7 @@ from timebox.writers.log_writer import write_log
 from timebox.calculator import current_block
 from timebox.output import print_json, error_json
 from timebox.models import WorkLog, EventType, BlockType
+from timebox.tz import default_today
 
 app = typer.Typer(help="작업 로그")
 
@@ -30,7 +31,7 @@ def create(
 ) -> None:
     """로그 파일 생성."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     ppath = plan_path(home, d)
 
     if not ppath.exists():

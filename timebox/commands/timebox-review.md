@@ -20,6 +20,9 @@ category: productivity
 ## 경로
 `$TIMEBOX_HOME` (미설정 시 `~/timebox`). 데이터 조회는 `timebox` CLI를 사용한다.
 
+## 시간대 (Timezone)
+- `_config.md`의 `timezone` 값 기준으로 "이번 주", "이번 달", "오늘" 등을 판단한다 (기본값: `Asia/Seoul`).
+
 ## 실행 흐름
 
 > **Phase 1 (0-6단계)**: 데이터 분석 + 회고 + 리뷰 파일 저장

@@ -7,6 +7,7 @@ import typer
 
 from timebox.output import print_json, error_json
 from timebox.paths import get_home
+from timebox.tz import default_today
 
 
 def commit(
@@ -14,7 +15,7 @@ def commit(
 ) -> None:
     """timebox 데이터 파일을 git 자동 커밋."""
     home = get_home()
-    today = date.today()
+    today = default_today()
 
     # git repo 확인
     check = subprocess.run(

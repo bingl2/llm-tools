@@ -17,6 +17,7 @@ def parse_config(content: str) -> TimeboxConfig:
 
     return TimeboxConfig(
         home=kv.get("home", "~/timebox"),
+        timezone=kv.get("timezone", "Asia/Seoul"),
         github_sync=kv.get("github_sync", "off").lower() == "on",
         google_calendar=kv.get("google_calendar", "off").lower() == "on",
         notification_channel=kv.get("notification_channel", "claude-code"),

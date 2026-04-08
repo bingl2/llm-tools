@@ -9,6 +9,7 @@ from timebox.paths import get_home, plan_path
 from timebox.parsers.plan_parser import parse_plan
 from timebox.writers.plan_writer import write_plan
 from timebox.output import print_json, error_json, load_stdin_json
+from timebox.tz import default_today
 
 app = typer.Typer(help="일간 플랜")
 
@@ -19,7 +20,7 @@ def show(
 ) -> None:
     """플랜 조회 (JSON)."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     path = plan_path(home, d)
 
     if not path.exists():
@@ -36,7 +37,7 @@ def create(
 ) -> None:
     """stdin JSON에서 플랜 마크다운 파일 생성."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     path = plan_path(home, d)
 
     data = load_stdin_json()
@@ -110,7 +111,7 @@ def check(
 ) -> None:
     """체크리스트 항목 토글 [ ] <-> [x]."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     path = plan_path(home, d)
 
     if not path.exists():
@@ -178,7 +179,7 @@ def energy(
 ) -> None:
     """Energy Log 테이블에 행 추가."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
     path = plan_path(home, d)
 
     if not path.exists():

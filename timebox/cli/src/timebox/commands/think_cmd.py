@@ -8,6 +8,7 @@ import typer
 from timebox.paths import get_home, think_path, thinks_dir, find_thinks_for_date
 from timebox.parsers.think_parser import parse_think
 from timebox.output import print_json, error_json
+from timebox.tz import default_today
 
 app = typer.Typer(help="생각 기록")
 
@@ -20,7 +21,7 @@ def create(
 ) -> None:
     """think 파일 생성. 마크다운 내용은 stdin으로 받는다."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
 
     parts = time_str.split(":")
     hhmm = f"{int(parts[0]):02d}{int(parts[1]):02d}"
@@ -43,7 +44,7 @@ def show(
 ) -> None:
     """think 파일 조회."""
     home = get_home()
-    d = date.fromisoformat(date_str) if date_str else date.today()
+    d = date.fromisoformat(date_str) if date_str else default_today()
 
     files = find_thinks_for_date(home, d)
     if not files:
@@ -83,7 +84,7 @@ def list_thinks(
     elif date_str:
         start = end = date.fromisoformat(date_str)
     else:
-        start = end = date.today()
+        start = end = default_today()
 
     entries = []
     d = start

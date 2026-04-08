@@ -18,6 +18,7 @@ from timebox.paths import (
     find_logs_for_date,
     plan_path,
 )
+from timebox.tz import default_today
 
 app = typer.Typer(help="목표 관리")
 
@@ -31,7 +32,7 @@ def show(
 ) -> None:
     """목표 파일을 JSON으로 출력."""
     home = get_home()
-    today = date.today()
+    today = default_today()
 
     _year = year if year is not None else today.year
     _month = month if month is not None else today.month
@@ -79,7 +80,7 @@ def progress(
 ) -> None:
     """주간 목표 진행 현황 (플랜 Big 3 참조 집계)."""
     home = get_home()
-    today = date.today()
+    today = default_today()
 
     _year = year if year is not None else today.year
     _week = week if week is not None else int(today.strftime("%V"))
